@@ -43,6 +43,11 @@ body {
   margin-left: 8px;
 }
 
+.countdown {
+  font-size: 50em;
+  text-align: center;
+}
+
 span.text-content {
   background: rgba(0,0,0,0.5);
   color: white;

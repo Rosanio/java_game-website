@@ -52,4 +52,25 @@ public class CardTest {
     newCard.delete();
     assertEquals(Card.all().size(), 0);
   }
+
+  @Test
+  public void checkMatch_returnsTureIfSymbolsAreTheSame() {
+    Card newCard = new Card("x");
+    newCard.save();
+    Card newCard2 = new Card("x");
+    newCard2.save();
+    assertTrue(newCard.checkMatch(newCard2));
+  }
+
+  @Test
+  public void removePair_removesCardPairFromDatabase() {
+    Card newCard = new Card("Matt");
+    newCard.save();
+    Card newCard2 = new Card("Matt");
+    newCard2.save();
+    Card newCard3 = new Card("X");
+    newCard3.save();
+    newCard.removePair();
+    assertEquals(Card.all().size(), 1);
+  }
 }

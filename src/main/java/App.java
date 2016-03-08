@@ -83,7 +83,7 @@ public class App {
       request.session().attribute("diffMultiplier", diffMultiplier);
       Turn newTurn = new Turn();
       newTurn.save();
-      response.redirect("/replay");
+      response.redirect("/3");
       return null;
       });
 
@@ -101,6 +101,24 @@ public class App {
       response.redirect("/replay");
       return null;
       });
+
+      get("/3", (request, response) -> {
+        HashMap<String, Object> model = new HashMap<String, Object>();
+        model.put("template", "templates/3.vtl");
+        return new ModelAndView (model, layout);
+      }, new VelocityTemplateEngine());
+
+      get("/2", (request, response) -> {
+        HashMap<String, Object> model = new HashMap<String, Object>();
+        model.put("template", "templates/2.vtl");
+        return new ModelAndView (model, layout);
+      }, new VelocityTemplateEngine());
+
+      get("/1", (request, response) -> {
+        HashMap<String, Object> model = new HashMap<String, Object>();
+        model.put("template", "templates/1.vtl");
+        return new ModelAndView (model, layout);
+      }, new VelocityTemplateEngine());
 
     get("/replay", (request, response) -> {
       if (Turn.allShown() == false) {
@@ -221,6 +239,18 @@ public class App {
       model.put("time", time);
       model.put("user", user);
       model.put("template", "templates/blue.vtl");
+      return new ModelAndView (model, layout);
+    }, new VelocityTemplateEngine());
+
+    get("/grey", (request, response) -> {
+      HashMap<String, Object> model = new HashMap<String, Object>();
+      User user = request.session().attribute("user");
+      Double time = request.session().attribute("time");
+      Integer currentScore = request.session().attribute("simonScore");
+      model.put("currentScore", currentScore);
+      model.put("time", time);
+      model.put("user", user);
+      model.put("template", "templates/grey.vtl");
       return new ModelAndView (model, layout);
     }, new VelocityTemplateEngine());
 

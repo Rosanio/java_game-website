@@ -56,4 +56,19 @@ public class Card {
       con.createQuery(sql).executeUpdate();
     }
   }
+
+  public boolean checkMatch(Card secondCard) {
+    if (secondCard.getSymbol().equals(symbol)) {
+      return true;
+    }
+    return false;
+  }
+
+  public void removePair() {
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "DELETE FROM cards WHERE symbol = :symbol";
+      con.createQuery(sql).addParameter("symbol", symbol).executeUpdate();
+    }
+  }
+  //shuffle
 }
