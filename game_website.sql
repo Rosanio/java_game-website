@@ -30,6 +30,40 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
+-- Name: cards; Type: TABLE; Schema: public; Owner: Guest; Tablespace: 
+--
+
+CREATE TABLE cards (
+    id integer NOT NULL,
+    symbol character varying,
+    shown boolean
+);
+
+
+ALTER TABLE cards OWNER TO "Guest";
+
+--
+-- Name: cards_id_seq; Type: SEQUENCE; Schema: public; Owner: Guest
+--
+
+CREATE SEQUENCE cards_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE cards_id_seq OWNER TO "Guest";
+
+--
+-- Name: cards_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: Guest
+--
+
+ALTER SEQUENCE cards_id_seq OWNED BY cards.id;
+
+
+--
 -- Name: turns; Type: TABLE; Schema: public; Owner: Guest; Tablespace: 
 --
 
@@ -106,6 +140,13 @@ ALTER SEQUENCE users_id_seq OWNED BY users.id;
 -- Name: id; Type: DEFAULT; Schema: public; Owner: Guest
 --
 
+ALTER TABLE ONLY cards ALTER COLUMN id SET DEFAULT nextval('cards_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: Guest
+--
+
 ALTER TABLE ONLY turns ALTER COLUMN id SET DEFAULT nextval('turns_id_seq'::regclass);
 
 
@@ -117,10 +158,88 @@ ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regcl
 
 
 --
+-- Data for Name: cards; Type: TABLE DATA; Schema: public; Owner: Guest
+--
+
+COPY cards (id, symbol, shown) FROM stdin;
+313	⌛️	f
+315	🌈	f
+317	🎾	f
+319	🐤	f
+321	👍	f
+323	✊	f
+325	👻	f
+327	💚	f
+329	💰	f
+331	🚴	f
+333	🖕	f
+335	🐼	f
+337	🦄	f
+339	🎎	f
+341		f
+343	🐠	f
+345	🍷	f
+347	🐈	f
+349	🐷	f
+351	😈	f
+353	👯	f
+355	💃	f
+357	🐮	f
+359	🌟	f
+361	🍡	f
+363	🎀	f
+314	⌛️	f
+316	🌈	f
+318	🎾	f
+320	🐤	f
+322	👍	f
+324	✊	f
+326	👻	f
+328	💚	f
+330	💰	f
+332	🚴	f
+334	🖕	f
+336	🐼	f
+338	🦄	f
+340	🎎	f
+342		f
+344	🐠	f
+346	🍷	f
+348	🐈	f
+350	🐷	f
+352	😈	f
+354	👯	f
+356	💃	f
+358	🐮	f
+360	🌟	f
+362	🍡	f
+364	🎀	f
+\.
+
+
+--
+-- Name: cards_id_seq; Type: SEQUENCE SET; Schema: public; Owner: Guest
+--
+
+SELECT pg_catalog.setval('cards_id_seq', 364, true);
+
+
+--
 -- Data for Name: turns; Type: TABLE DATA; Schema: public; Owner: Guest
 --
 
 COPY turns (id, comp_turn, user_turn, shown) FROM stdin;
+271	blue	\N	t
+272	red	\N	t
+273	yellow	\N	t
+270	yellow	green	t
+263	green	\N	t
+264	green	\N	t
+265	yellow	\N	t
+266	yellow	\N	t
+267	green	\N	t
+268	green	\N	t
+269	yellow	\N	t
 \.
 
 
@@ -128,7 +247,7 @@ COPY turns (id, comp_turn, user_turn, shown) FROM stdin;
 -- Name: turns_id_seq; Type: SEQUENCE SET; Schema: public; Owner: Guest
 --
 
-SELECT pg_catalog.setval('turns_id_seq', 30, true);
+SELECT pg_catalog.setval('turns_id_seq', 273, true);
 
 
 --
@@ -136,6 +255,12 @@ SELECT pg_catalog.setval('turns_id_seq', 30, true);
 --
 
 COPY users (id, name, password, permissions, passwordhint, simon_high_score, profilepic) FROM stdin;
+6	Anna	123	user	numbers	140	\N
+7	matt2	123	user	\N	3	\N
+10	matt5	123	user	\N	0	\N
+11	matt	123	user	not123	360	\N
+12	charlie	123	user	123	12	http://cps-static.rovicorp.com/3/JPG_400/MI0001/458/MI0001458042.jpg?partner=allrovi.com
+13	mbrecoon	333	user	333	110	\N
 \.
 
 
@@ -143,7 +268,15 @@ COPY users (id, name, password, permissions, passwordhint, simon_high_score, pro
 -- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: Guest
 --
 
-SELECT pg_catalog.setval('users_id_seq', 4, true);
+SELECT pg_catalog.setval('users_id_seq', 13, true);
+
+
+--
+-- Name: cards_pkey; Type: CONSTRAINT; Schema: public; Owner: Guest; Tablespace: 
+--
+
+ALTER TABLE ONLY cards
+    ADD CONSTRAINT cards_pkey PRIMARY KEY (id);
 
 
 --
