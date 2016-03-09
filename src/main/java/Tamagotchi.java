@@ -1,6 +1,8 @@
 import java.util.*;
 import org.sql2o.*;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Tamagotchi {
   public static final int MAX_SLEEP = 15;
@@ -8,7 +10,7 @@ public class Tamagotchi {
   public static final int MAX_HAPPY = 15;
   private int id;
   private String name;
-  private int age;
+  public int age;
   private String gender;
   private boolean alive;
   private int sleep_level;
@@ -94,15 +96,37 @@ public class Tamagotchi {
     }
     return happyStatus;
   }
-//life status
+//life/age status
   public boolean isAlive(){
     if (hunger_level > 0){
       alive = true;
     } else {
-      alive = false;
+      try (Connection con = DB.sql2o.open()){
+        String sql = "UPDATE tamagotchis SET alive = false";
+        con.createQuery(sql)
+        .executeUpdate();
+      }
+      // alive = false;
     }
     return alive;
   }
+
+  // Timer timer = new Timer();
+  // timer.scheduleAtFixedRate(
+  //   new TimerTask()
+  //   {
+  //     public void run(){
+  //       this.age+=3;
+  //       try(Connection con = DB.sql2o.open()){
+  //         String sql = "UPDATE tamagotchis SET (age) = (:age)";
+  //         con.createQuery(sql)
+  //         .addParameter("age", this.age);
+  //         .executeUpdate();
+  //       }
+  //     }
+  //   }, 0, 3000);
+
+
 //create
   @Override
   public boolean equals(Object otherTamagotchi) {
@@ -143,6 +167,19 @@ public class Tamagotchi {
     }
   }
 //update
+
+  public void updateAge(){
+    this.age+=3;
+    this.hunger_level-=3;
+    try(Connection con = DB.sql2o.open()){
+      String sql = "UPDATE tamagotchis SET (age, hunger_level) = (:age, :hunger_level)";
+      con.createQuery(sql)
+      .addParameter("age", this.age)
+      .addParameter("hunger_level", hunger_level)
+      .executeUpdate();
+    }
+  }
+
   public void updateOnFeed() {
     if((this.hunger_level + 3) > 15){
       this.hunger_level = MAX_HUNGER;

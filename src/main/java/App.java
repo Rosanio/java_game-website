@@ -2,11 +2,35 @@ import java.util.*;
 import spark.ModelAndView;
 import spark.template.velocity.VelocityTemplateEngine;
 import java.lang.Thread;
+import java.util.Timer;
+import java.util.TimerTask;
+import org.sql2o.*;
 
 import static spark.Spark.*;
 
 public class App {
   public static void main(String[] args) {
+
+
+      // TimerTask task = new TimerTask(){
+      // @Override
+      //   public void run(){
+      //     Tamagotchi newTama = Tamagotchi.find(8);
+      //     newTama.updateAge();
+      //     newTama.isAlive();
+      //     System.out.println(newTama.getAge());
+      //     System.out.println(newTama.isAlive());
+      //
+      //   }
+      // };
+      //
+      // Timer timer = new Timer();
+      // long delay = 0;
+      // long intervalPeriod = 3000;
+      //
+      // timer.scheduleAtFixedRate(task, delay, intervalPeriod);
+
+
     staticFileLocation("/public");
     String layout = "templates/layout.vtl";
 //user info & game page
@@ -333,6 +357,9 @@ public class App {
       int id = Integer.parseInt(request.params("id"));
       Tamagotchi tamagotchi = Tamagotchi.find(id);
       String action = request.queryParams("action");
+      // if(tamagotchi.isAlive() == false){
+      //
+      // }
       if (action.equals("feed")){
         tamagotchi.updateOnFeed();
         response.redirect("/feedtamagotchi/" + tamagotchi.getId());
@@ -377,5 +404,7 @@ public class App {
       model.put("template", "templates/sleeptamagotchi.vtl");
       return new ModelAndView (model, layout);
     }, new VelocityTemplateEngine());
+
+
   } //end of main
 } //end of app

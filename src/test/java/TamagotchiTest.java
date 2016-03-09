@@ -52,7 +52,7 @@ public class TamagotchiTest {
 
   @Test
   public void tamagotchi_adjustsStatsAfterPlaying_true() {
-    Tamagotchi myPet = new Tamagotchi("Moneybags");
+    Tamagotchi myPet = new Tamagotchi("Moneybag$");
     myPet.updateOnPlay();
     assertEquals(2, myPet.getHungerLevel());
     assertEquals(12, myPet.getSleepLevel());
