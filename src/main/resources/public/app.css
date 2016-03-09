@@ -90,23 +90,47 @@ ul.img-wrapper li {
   width: 250px;
 }
 
-.memoryCard {
-  margin: 20px;
+.container {
+  width: 95%;
+}
+
+.deckForm{
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-flow: row wrap;
+  align-content: flex-start;
 }
 
 .card {
   font-size: 60px;
   text-align: center;
   padding: 10px;
-  background-color: white;
-  border: 1px solid black;
+  margin: 4px;
+  /* card sizing */
+  height: 200px;
+  width: 140px;
+  background: white;
+  background-image: url("/images/cardback.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  justify-content: center;
+  align-items: center;
+
 }
 
-
-/* put all cards in a div: deck*/
- .deck {
-  height: 10vh;
-  display: flex;
-  flex-wrap: wrap;
+.card_front {
+  font-size: 60px;
+  text-align: center;
+  padding: 10px;
+  margin: 4px;
+  /* card sizing */
+  height: 200px;
+  width: 140px;
+  background: white;
+  background-image: url("/images/card_front.jpg");
+  background-position: center;
+  background-repeat: repeat;
 
 }
