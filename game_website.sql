@@ -10,14 +10,14 @@ SET check_function_bodies = false;
 SET client_min_messages = warning;
 
 --
--- Name: plpgsql; Type: EXTENSION; Schema: -; Owner:
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
 --
 
 CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 
 
 --
--- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner:
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
 --
 
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
@@ -30,7 +30,7 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- Name: cards; Type: TABLE; Schema: public; Owner: Guest; Tablespace:
+-- Name: cards; Type: TABLE; Schema: public; Owner: Guest; Tablespace: 
 --
 
 CREATE TABLE cards (
@@ -64,7 +64,46 @@ ALTER SEQUENCE cards_id_seq OWNED BY cards.id;
 
 
 --
--- Name: turns; Type: TABLE; Schema: public; Owner: Guest; Tablespace:
+-- Name: tamagotchis; Type: TABLE; Schema: public; Owner: Guest; Tablespace: 
+--
+
+CREATE TABLE tamagotchis (
+    id integer NOT NULL,
+    name character varying,
+    age integer,
+    gender character varying,
+    sleep_level integer,
+    hunger_level integer,
+    happy_level integer,
+    alive boolean
+);
+
+
+ALTER TABLE tamagotchis OWNER TO "Guest";
+
+--
+-- Name: tamagotchis_id_seq; Type: SEQUENCE; Schema: public; Owner: Guest
+--
+
+CREATE SEQUENCE tamagotchis_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE tamagotchis_id_seq OWNER TO "Guest";
+
+--
+-- Name: tamagotchis_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: Guest
+--
+
+ALTER SEQUENCE tamagotchis_id_seq OWNED BY tamagotchis.id;
+
+
+--
+-- Name: turns; Type: TABLE; Schema: public; Owner: Guest; Tablespace: 
 --
 
 CREATE TABLE turns (
@@ -99,7 +138,7 @@ ALTER SEQUENCE turns_id_seq OWNED BY turns.id;
 
 
 --
--- Name: users; Type: TABLE; Schema: public; Owner: Guest; Tablespace:
+-- Name: users; Type: TABLE; Schema: public; Owner: Guest; Tablespace: 
 --
 
 CREATE TABLE users (
@@ -147,6 +186,13 @@ ALTER TABLE ONLY cards ALTER COLUMN id SET DEFAULT nextval('cards_id_seq'::regcl
 -- Name: id; Type: DEFAULT; Schema: public; Owner: Guest
 --
 
+ALTER TABLE ONLY tamagotchis ALTER COLUMN id SET DEFAULT nextval('tamagotchis_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: Guest
+--
+
 ALTER TABLE ONLY turns ALTER COLUMN id SET DEFAULT nextval('turns_id_seq'::regclass);
 
 
@@ -162,58 +208,58 @@ ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regcl
 --
 
 COPY cards (id, symbol, shown) FROM stdin;
-313	⌛️	f
-315	🌈	f
-317	🎾	f
-319	🐤	f
-321	👍	f
-323	✊	f
-325	👻	f
-327	💚	f
-329	💰	f
-331	🚴	f
-333	🖕	f
-335	🐼	f
-337	🦄	f
-339	🎎	f
-341		f
-343	🐠	f
-345	🍷	f
-347	🐈	f
-349	🐷	f
-351	😈	f
-353	👯	f
-355	💃	f
-357	🐮	f
-359	🌟	f
-361	🍡	f
-363	🎀	f
-314	⌛️	f
-316	🌈	f
-318	🎾	f
-320	🐤	f
-322	👍	f
-324	✊	f
-326	👻	f
-328	💚	f
-330	💰	f
-332	🚴	f
-334	🖕	f
-336	🐼	f
-338	🦄	f
-340	🎎	f
-342		f
-344	🐠	f
-346	🍷	f
-348	🐈	f
-350	🐷	f
-352	😈	f
-354	👯	f
-356	💃	f
-358	🐮	f
-360	🌟	f
-362	🍡	f
-364	🎀	f
+677	⌛️	f
+679	🌈	f
+681	🎾	f
+683	🐤	f
+685	👍	f
+687	✊	f
+689	👻	f
+691	💚	f
+693	💰	f
+695	🚴	f
+697	🖕	f
+699	🐼	f
+701	🦄	f
+703	🎎	f
+705		f
+707	🐠	f
+709	🍷	f
+711	🐈	f
+713	🐷	f
+715	😈	f
+717	👯	f
+719	💃	f
+721	🐮	f
+723	🌟	f
+725	🍡	f
+727	🎀	f
+678	⌛️	f
+680	🌈	f
+682	🎾	f
+684	🐤	f
+686	👍	f
+688	✊	f
+690	👻	f
+692	💚	f
+694	💰	f
+696	🚴	f
+698	🖕	f
+700	🐼	f
+702	🦄	f
+704	🎎	f
+706		f
+708	🐠	f
+710	🍷	f
+712	🐈	f
+714	🐷	f
+716	😈	f
+718	👯	f
+720	💃	f
+722	🐮	f
+724	🌟	f
+726	🍡	f
+728	🎀	f
 \.
 
 
@@ -221,7 +267,23 @@ COPY cards (id, symbol, shown) FROM stdin;
 -- Name: cards_id_seq; Type: SEQUENCE SET; Schema: public; Owner: Guest
 --
 
-SELECT pg_catalog.setval('cards_id_seq', 364, true);
+SELECT pg_catalog.setval('cards_id_seq', 728, true);
+
+
+--
+-- Data for Name: tamagotchis; Type: TABLE DATA; Schema: public; Owner: Guest
+--
+
+COPY tamagotchis (id, name, age, gender, sleep_level, hunger_level, happy_level, alive) FROM stdin;
+4	Izzy	0	Female	15	4	8	t
+\.
+
+
+--
+-- Name: tamagotchis_id_seq; Type: SEQUENCE SET; Schema: public; Owner: Guest
+--
+
+SELECT pg_catalog.setval('tamagotchis_id_seq', 4, true);
 
 
 --
@@ -229,17 +291,15 @@ SELECT pg_catalog.setval('cards_id_seq', 364, true);
 --
 
 COPY turns (id, comp_turn, user_turn, shown) FROM stdin;
-271	blue	\N	t
-272	red	\N	t
-273	yellow	\N	t
-270	yellow	green	t
-263	green	\N	t
-264	green	\N	t
-265	yellow	\N	t
-266	yellow	\N	t
-267	green	\N	t
-268	green	\N	t
-269	yellow	\N	t
+281	red	\N	t
+282	green	\N	t
+283	red	\N	t
+284	red	\N	t
+285	red	\N	t
+286	red	\N	t
+279	red	red	t
+280	yellow	red	t
+278	red	\N	t
 \.
 
 
@@ -247,7 +307,7 @@ COPY turns (id, comp_turn, user_turn, shown) FROM stdin;
 -- Name: turns_id_seq; Type: SEQUENCE SET; Schema: public; Owner: Guest
 --
 
-SELECT pg_catalog.setval('turns_id_seq', 273, true);
+SELECT pg_catalog.setval('turns_id_seq', 286, true);
 
 
 --
@@ -261,6 +321,7 @@ COPY users (id, name, password, permissions, passwordhint, simon_high_score, pro
 11	matt	123	user	not123	360	\N
 12	charlie	123	user	123	12	http://cps-static.rovicorp.com/3/JPG_400/MI0001/458/MI0001458042.jpg?partner=allrovi.com
 13	mbrecoon	333	user	333	110	\N
+14	izzy	12345	user	\N	36	\N
 \.
 
 
@@ -268,11 +329,11 @@ COPY users (id, name, password, permissions, passwordhint, simon_high_score, pro
 -- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: Guest
 --
 
-SELECT pg_catalog.setval('users_id_seq', 13, true);
+SELECT pg_catalog.setval('users_id_seq', 14, true);
 
 
 --
--- Name: cards_pkey; Type: CONSTRAINT; Schema: public; Owner: Guest; Tablespace:
+-- Name: cards_pkey; Type: CONSTRAINT; Schema: public; Owner: Guest; Tablespace: 
 --
 
 ALTER TABLE ONLY cards
@@ -280,7 +341,15 @@ ALTER TABLE ONLY cards
 
 
 --
--- Name: turns_pkey; Type: CONSTRAINT; Schema: public; Owner: Guest; Tablespace:
+-- Name: tamagotchis_pkey; Type: CONSTRAINT; Schema: public; Owner: Guest; Tablespace: 
+--
+
+ALTER TABLE ONLY tamagotchis
+    ADD CONSTRAINT tamagotchis_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: turns_pkey; Type: CONSTRAINT; Schema: public; Owner: Guest; Tablespace: 
 --
 
 ALTER TABLE ONLY turns
@@ -288,7 +357,7 @@ ALTER TABLE ONLY turns
 
 
 --
--- Name: users_pkey; Type: CONSTRAINT; Schema: public; Owner: Guest; Tablespace:
+-- Name: users_pkey; Type: CONSTRAINT; Schema: public; Owner: Guest; Tablespace: 
 --
 
 ALTER TABLE ONLY users
@@ -308,3 +377,4 @@ GRANT ALL ON SCHEMA public TO PUBLIC;
 --
 -- PostgreSQL database dump complete
 --
+

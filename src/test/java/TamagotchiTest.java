@@ -15,7 +15,7 @@ public class TamagotchiTest {
     assertEquals(4, myPet.getHungerLevel());
     assertEquals(15, myPet.getSleepLevel());
     assertEquals(8, myPet.getHappyLevel());
-    assertEquals(myPet.isAlive(), true);
+    assertTrue(myPet.isAlive());
   }
 
   @Test
