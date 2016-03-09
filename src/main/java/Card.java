@@ -9,6 +9,7 @@ public class Card {
   public Card (String symbol) {
     this.id = id;
     this.symbol = symbol;
+    this.shown = false;
   }
 
   public int getId() {
@@ -38,7 +39,7 @@ public class Card {
 
   public void save() {
     try(Connection con = DB.sql2o.open()) {
-      String sql = "INSERT INTO cards (symbol) VALUES (:symbol)";
+      String sql = "INSERT INTO cards (symbol, shown) VALUES (:symbol, false)";
       this.id = (int) con.createQuery(sql, true).addParameter("symbol", symbol).executeUpdate().getKey();
     }
   }
@@ -50,7 +51,7 @@ public class Card {
     }
   }
 
-  public void delete() {
+  public static void delete() {
     try(Connection con = DB.sql2o.open()) {
       String sql = "DELETE FROM cards";
       con.createQuery(sql).executeUpdate();
@@ -71,4 +72,20 @@ public class Card {
     }
   }
   //shuffle
+  public static List<Card> makeListOfCards(int limit) {
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "SELECT * FROM cards LIMIT :limit";
+      return con.createQuery(sql).addParameter("limit", limit).executeAndFetch(Card.class);
+    }
+  }
+
+  public static void fillDatabase() {
+    String[] symbols = {"⌛️", "🌈", "🎾", "🐤", "👍", "✊", "👻", "💚", "💰", "🚴", "🖕", "🐼", "🦄", "🎎", "", "🐠", "🍷", "🐈", "🐷", "😈", "👯", "💃", "🐮", "🌟", "🍡", "🎀"};
+    for(String symbol : symbols) {
+      Card newCard = new Card(symbol);
+      newCard.save();
+      Card newCard2 = new Card(symbol);
+      newCard2.save();
+    }
+  }
 }
