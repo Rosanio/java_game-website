@@ -5,7 +5,11 @@
     <h1 class="gameHeaderText">Memory</h1>
     <img src="/images/memory.jpg" alt="simon says" class="img-responsive center-block">
     <br></br>
-    <form action="/memoryBoard" method="post">
+    <form action="/memory" method="post">
+      <div class="form-group">
+        <label for="cardNumber">Select a difficulty level</label>
+        <input type="range" name="cardNumber" min="2" max="52" step="2">
+      </div>
       <button type="submit" class="btn btn-success simonButton">Go!</button>
     </form>
     <!-- <form action="next-turn" method="post">

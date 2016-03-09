@@ -1,0 +1,15 @@
+<div class="row">
+<form  action="/memoryBoard" method="post">
+  #foreach ($card in $cards)
+  <div class="col-xs-2 memoryCard">
+    #if($card.getMatch())
+    <button value="$card.getOrderId()" name="cards" type="submit" class="btn btn-defalut card" disabled>$card.getSymbol()</button>
+    #elseif($card.getShown())
+    <button value="$card.getOrderId()" name="cards" type="submit" class="btn btn-defalut card">$card.getSymbol()</button>
+    #else
+    <button value="$card.getOrderId()" name="cards" type="submit" class="btn btn-defalut card">X</button>
+    #end
+  </div>
+#end
+</form>
+</div>

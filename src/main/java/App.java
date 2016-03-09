@@ -314,10 +314,17 @@ public class App {
       return new ModelAndView (model, layout);
     }, new VelocityTemplateEngine());
 
-    post("/memoryBoard", (request, response) -> {
+    post("/memory", (request, response) -> {
       Card.delete();
       Card.fillDatabase();
-      List<Card> cards = Card.makeListOfCards(16).shuffle();
+      System.out.println(request.queryParams("cardNumber"));
+      List<Card> cards = Card.makeListOfCards(Integer.parseInt(request.queryParams("cardNumber")));
+      Collections.shuffle(cards);
+      int counter = 0;
+      for(Card card : cards) {
+        card.assignOrderId(counter);
+        counter += 1;
+      }
       request.session().attribute("cards", cards);
       response.redirect("/memoryBoard");
       return null;
@@ -327,10 +334,87 @@ public class App {
       HashMap<String, Object> model = new HashMap<String, Object>();
       User user = request.session().attribute("user");
       List<Card> cards = request.session().attribute("cards");
+
       model.put("user", user);
       model.put("cards", cards);
       // model.put("users", User.getSimonHighScores());
       model.put("template", "templates/memoryBoard.vtl");
+      return new ModelAndView (model, layout);
+    }, new VelocityTemplateEngine());
+
+    post("/memoryBoard", (request, response) -> {
+      List<Card> cards = request.session().attribute("cards");
+      Card card = cards.get(Integer.parseInt(request.queryParams("cards")));
+      card.updateShown();
+      int counter = 0;
+      for(Card cardd : cards) {
+        if (cardd.getShown()) {
+          counter += 1;
+        }
+      }
+      if (counter == 1) {
+        request.session().attribute("firstCard", card);
+      }
+      if (counter == 2) {
+        Card caard = request.session().attribute("firstCard");
+        Card secondCard = cards.get(Integer.parseInt(request.queryParams("cards")));
+        request.session().attribute("secondCard", secondCard);
+        boolean cardMatch = caard.checkMatch(secondCard);
+        if (cardMatch) {
+          caard.matched();
+          caard.updateShown();
+          secondCard.matched();
+          secondCard.updateShown();
+          int matchedCounter = 0;
+          for(Card ccard : cards) {
+            if(ccard.getMatch()) {
+              matchedCounter += 1;
+            }
+          }
+          if(matchedCounter == cards.size()) {
+            response.redirect("/memoryGameOver");
+            return null;
+          }
+        } else {
+          response.redirect("/showCards");
+          return null;
+        }
+      }
+      request.session().attribute("cards", cards);
+      response.redirect("/memoryBoard");
+      return null;
+    });
+
+    get("/showCards", (request, response) -> {
+      HashMap<String, Object> model = new HashMap<String, Object>();
+      User user = request.session().attribute("user");
+      List<Card> cards = request.session().attribute("cards");
+
+      model.put("user", user);
+      model.put("cards", cards);
+      // model.put("users", User.getSimonHighScores());
+      model.put("template", "templates/showCards.vtl");
+      return new ModelAndView (model, layout);
+    }, new VelocityTemplateEngine());
+
+    get("/flipCards", (request, response) -> {
+      User user = request.session().attribute("user");
+      List<Card> cards = request.session().attribute("cards");
+      Card firstCard = request.session().attribute("firstCard");
+      firstCard.updateShown();
+      Card secondCard = request.session().attribute("secondCard");
+      secondCard.updateShown();
+      response.redirect("/memoryBoard");
+      return null;
+    });
+
+    get("/memoryGameOver", (request, response) -> {
+      HashMap<String, Object> model = new HashMap<String, Object>();
+      User user = request.session().attribute("user");
+
+      model.put("user", user);
+      // model.put("users", User.getSimonHighScores());
+      model.put("template", "templates/memoryGameOver.vtl");
       return new ModelAndView (model, layout);
     }, new VelocityTemplateEngine());
 

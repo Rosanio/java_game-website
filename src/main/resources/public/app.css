@@ -89,3 +89,24 @@ ul.img-wrapper li {
   position: relative;
   width: 250px;
 }
+
+.memoryCard {
+  margin: 20px;
+}
+
+.card {
+  font-size: 60px;
+  text-align: center;
+  padding: 10px;
+  background-color: white;
+  border: 1px solid black;
+}
+
+
+/* put all cards in a div: deck*/
+ .deck {
+  height: 10vh;
+  display: flex;
+  flex-wrap: wrap;
+
+}
