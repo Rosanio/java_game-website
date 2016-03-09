@@ -21,7 +21,7 @@ public class TamagotchiTest {
   @Test
   public void tamagotchi_statusAdjustAccordinglyWhenFed_true(){
     Tamagotchi myPet = new Tamagotchi("Moneybags");
-    myPet.feed();
+    myPet.updateOnFeed();
     assertEquals(7, myPet.getHungerLevel());
     assertEquals(14, myPet.getSleepLevel());
     assertEquals(9, myPet.getHappyLevel());
@@ -30,10 +30,10 @@ public class TamagotchiTest {
   @Test
   public void tamagotchi_capsAtMaxSleepStat_true(){
     Tamagotchi myPet = new Tamagotchi("Moneybags");
-    myPet.feed();
-    myPet.feed();
-    myPet.feed();
-    myPet.feed();
+    myPet.updateOnFeed();
+    myPet.updateOnFeed();
+    myPet.updateOnFeed();
+    myPet.updateOnFeed();
     assertEquals(15, myPet.getHungerLevel());
     assertEquals(11, myPet.getSleepLevel());
     assertEquals(12, myPet.getHappyLevel());
@@ -42,9 +42,9 @@ public class TamagotchiTest {
   @Test
   public void tamagotchi_capsAtMaxPlayStat_true(){
     Tamagotchi myPet = new Tamagotchi("Moneybags");
-    myPet.play();
-    myPet.play();
-    myPet.play();
+    myPet.updateOnPlay();
+    myPet.updateOnPlay();
+    myPet.updateOnPlay();
     assertEquals(0, myPet.getHungerLevel());
     assertEquals(6, myPet.getSleepLevel());
     assertEquals(15, myPet.getHappyLevel());
@@ -53,7 +53,7 @@ public class TamagotchiTest {
   @Test
   public void tamagotchi_adjustsStatsAfterPlaying_true() {
     Tamagotchi myPet = new Tamagotchi("Moneybags");
-    myPet.play();
+    myPet.updateOnPlay();
     assertEquals(2, myPet.getHungerLevel());
     assertEquals(12, myPet.getSleepLevel());
     assertEquals(11, myPet.getHappyLevel());
@@ -62,8 +62,8 @@ public class TamagotchiTest {
   @Test
   public void tamagotchi_adjustsStatsAfterSleeping_true() {
     Tamagotchi myPet = new Tamagotchi("Meeple");
-    myPet.play();
-    myPet.sleep();
+    myPet.updateOnPlay();
+    myPet.updateOnSleep();
     assertEquals(15, myPet.getSleepLevel());
     assertEquals(0, myPet.getHungerLevel());
   }
@@ -72,8 +72,8 @@ public class TamagotchiTest {
   public void tamagotchi_isAliveIfFoodLevelIsGreaterThan0() {
     Tamagotchi myPet = new Tamagotchi("Meeple");
     assertTrue(myPet.isAlive());
-    myPet.play();
-    myPet.play();
+    myPet.updateOnPlay();
+    myPet.updateOnPlay();
     assertFalse(myPet.isAlive());
   }
 
