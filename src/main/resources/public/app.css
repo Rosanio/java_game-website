@@ -89,3 +89,12 @@ ul.img-wrapper li {
   position: relative;
   width: 250px;
 }
+
+.tamagotchiContainer {
+  text-align: center;
+}
+
+#tamagotchiimg {
+  height: 150px;
+  width: auto;
+}

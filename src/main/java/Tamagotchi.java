@@ -116,9 +116,14 @@ public class Tamagotchi {
 
   public void save(){
     try(Connection con = DB.sql2o.open()){
-      String sql = "INSERT INTO tamagotchis (name, age, gender, sleep_level, hunger_level, happy_level) VALUES (:name, :age, :gender, :sleep_level, :hunger_level, :happy_level)";
+      String sql = "INSERT INTO tamagotchis (name, age, gender, sleep_level, hunger_level, happy_level, alive) VALUES (:name, :age, :gender, :sleep_level, :hunger_level, :happy_level, true)";
       this.id = (int) con.createQuery(sql, true)
-      .addParameter("name", name).addParameter("age", age).addParameter("gender", gender).addParameter("sleep_level", sleep_level).addParameter("hunger_level", hunger_level).addParameter("happy_level", happy_level)
+      .addParameter("name", name)
+      .addParameter("age", age)
+      .addParameter("gender", gender)
+      .addParameter("sleep_level", sleep_level)
+      .addParameter("hunger_level", hunger_level)
+      .addParameter("happy_level", happy_level)
       .executeUpdate()
       .getKey();
     }
