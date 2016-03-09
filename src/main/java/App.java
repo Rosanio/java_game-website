@@ -12,8 +12,6 @@ public class App {
 
     get("/", (request, response) -> {
       HashMap<String, Object> model = new HashMap<String, Object>();
-      Card.delete();
-      Card.fillDatabase();
       model.put("template", "templates/index.vtl");
       return new ModelAndView (model, layout);
     }, new VelocityTemplateEngine());
@@ -304,6 +302,35 @@ public class App {
       model.put("user", user);
       model.put("users", User.getSimonHighScores());
       model.put("template", "templates/gameover.vtl");
+      return new ModelAndView (model, layout);
+    }, new VelocityTemplateEngine());
+
+    get("/memory", (request, response) -> {
+      HashMap<String, Object> model = new HashMap<String, Object>();
+      User user = request.session().attribute("user");
+      model.put("user", user);
+      // model.put("users", User.getSimonHighScores());
+      model.put("template", "templates/memory.vtl");
+      return new ModelAndView (model, layout);
+    }, new VelocityTemplateEngine());
+
+    post("/memoryBoard", (request, response) -> {
+      Card.delete();
+      Card.fillDatabase();
+      List<Card> cards = Card.makeListOfCards(16).shuffle();
+      request.session().attribute("cards", cards);
+      response.redirect("/memoryBoard");
+      return null;
+    });
+
+    get("/memoryBoard", (request, response) -> {
+      HashMap<String, Object> model = new HashMap<String, Object>();
+      User user = request.session().attribute("user");
+      List<Card> cards = request.session().attribute("cards");
+      model.put("user", user);
+      model.put("cards", cards);
+      // model.put("users", User.getSimonHighScores());
+      model.put("template", "templates/memoryBoard.vtl");
       return new ModelAndView (model, layout);
     }, new VelocityTemplateEngine());
 
