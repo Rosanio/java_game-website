@@ -314,5 +314,17 @@ public class App {
       return new ModelAndView (model, layout);
     }, new VelocityTemplateEngine());
 
+    get("/hangman", (request, response) -> {
+      HashMap<String, Object> model = new HashMap<String, Object>();
+      User user = request.session().attribute("user");
+      model.put("user", user);
+      model.put("users", User.getSimonHighScores());
+      String userGuess = request.queryParams("guess");
+      
+      model.put("template", "templates/hangman.vtl");
+      return new ModelAndView (model, layout);
+    }, new VelocityTemplateEngine());
+
+
   } //end of main
 } //end of app

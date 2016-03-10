@@ -95,7 +95,7 @@ public class UserTest {
     User newUser11 = new User("Matt", "cat", "admin");
     newUser11.save();
     newUser11.updateSimonScore(100);
-    assertTrue(User.getHighScores().size() == 10);
-    assertFalse(User.getHighScores().contains(newUser5));
+    assertTrue(User.getSimonHighScores().size() == 10);
+    assertFalse(User.getSimonHighScores().contains(newUser5));
   }
 }

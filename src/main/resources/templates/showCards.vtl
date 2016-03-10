@@ -1,0 +1,22 @@
+<p>Score: $score</p>
+<div class="deck">
+<form class="deckForm" action="/memoryBoard" method="post">
+  #foreach ($card in $cards)
+
+    #if($card.getMatch())
+    <div class="card_wrapper">
+      <button value="$card.getOrderId()" name="cards" type="submit" class="btn btn-defalut card_front" disabled>$card.getSymbol()</button>
+    </div>
+    #elseif($card.getShown())
+    <div class="card_wrapper">
+      <button value="$card.getOrderId()" name="cards" type="submit" class="btn btn-defalut card_front" disabled>$card.getSymbol()</button>
+    </div>
+    #else
+    <div class="card_wrapper">
+      <button value="$card.getOrderId()" name="cards" type="submit" class="btn btn-defalut card" disabled></button>
+    </div>
+    #end
+  #end
+</form>
+</div>
+   <meta http-equiv="refresh" content="1;url=/flipCards" />
