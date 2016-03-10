@@ -9,7 +9,7 @@ public class User {
   private String passwordHint;
   private String profilepic;
   private int simon_high_score;
-  private int tamagotchi_id;
+  private static int tamagotchi_id;
 
   public User(String name, String password, String permissions) {
     this.name = name;
@@ -90,6 +90,13 @@ public class User {
     try(Connection con = DB.sql2o.open()) {
       String sql = "DELETE FROM users WHERE id = :id";
       con.createQuery(sql).addParameter("id", id).executeUpdate();
+    }
+  }
+//REVISIT THIS TOMORROW***********
+  public static void clearTamagotchi() {
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "UPDATE users SET tamagotchi_id = null";
+      con.createQuery(sql).executeUpdate();
     }
   }
 

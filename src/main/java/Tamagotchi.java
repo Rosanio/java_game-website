@@ -245,4 +245,12 @@ public class Tamagotchi {
       .executeUpdate();
     }
   }
+
+  //delete
+  public static void delete() {
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "DELETE FROM tamagotchis";
+      con.createQuery(sql).executeUpdate();
+    }
+  }
 }

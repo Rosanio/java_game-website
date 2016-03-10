@@ -19,9 +19,10 @@ public class App {
           System.out.println(globalUserId);
           if (globalUserId != null){
             Tamagotchi newTama = Tamagotchi.find(User.find(globalUserId).getTamagotchiId());
-            System.out.println(newTama.getName());
-            newTama.updateAge();
-            newTama.isAlive();
+            if (newTama != null){
+              newTama.updateAge();
+              newTama.isAlive();
+            }
           }
         }
       };
@@ -328,6 +329,8 @@ public class App {
 //tamagotchi
     get("/tamagotchi", (request, response) -> {
       HashMap<String, Object> model = new HashMap<String, Object>();
+      Tamagotchi.delete();
+      User.clearTamagotchi();
       model.put("template", "templates/tamagotchi.vtl");
       return new ModelAndView (model, layout);
     }, new VelocityTemplateEngine());
@@ -358,9 +361,6 @@ public class App {
       int id = Integer.parseInt(request.params("id"));
       Tamagotchi tamagotchi = Tamagotchi.find(id);
       String action = request.queryParams("action");
-      // if(tamagotchi.isAlive() == false){
-      //
-      // }
       if (action.equals("feed")){
         tamagotchi.updateOnFeed();
         response.redirect("/feedtamagotchi/" + tamagotchi.getId());
