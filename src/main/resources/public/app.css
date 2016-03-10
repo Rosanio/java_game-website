@@ -18,11 +18,12 @@ body {
 }
 
 .playButton {
-  margin-left: 43%;
+  text-align: center;
 }
 
 .gameButton {
-  margin-left: 43%;
+  width: 100%;
+  text-align: center;
 }
 
 #profilePic {
@@ -32,8 +33,37 @@ body {
 
 .color-btn {
   width: 100%;
-  line-height: 20em;
+  line-height: 30em;
 }
+
+#red {
+  border-radius: 200px 70px 300px 0;
+}
+#green {
+  border-radius: 70px 250px 0 300px;
+}
+#blue {
+  border-radius: 0 300px 70px 250px;
+}
+#yellow {
+  border-radius: 300px 0 250px 70px;
+}
+
+.black-circ {
+  text-align: center;
+  color: white;
+  position: absolute;
+  top: 50%;
+  left: 44%;
+  margin-right: -60%;
+  transform: translate( -70% -60%);
+  z-index: 1;
+  height: 150px;
+  width: 150px;
+  border-radius: 100%;
+  background: #000;
+}
+
 
 .col-md-6 {
   padding: 0;
