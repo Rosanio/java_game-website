@@ -461,9 +461,50 @@ public class App {
         card.assignOrderId(counter);
         counter += 1;
       }
-      String players = request.queryParams("players");
-      
       request.session().attribute("cards", cardDeck);
+      String players = request.queryParams("players");
+      if(players.equals("1")) {
+        response.redirect("/memoryBoard");
+        return null;
+      }
+      response.redirect("/player2Login");
+      return null;
+    });
+
+    get("/player2Login", (request, response) -> {
+      HashMap<String, Object> model = new HashMap<String, Object>();
+      User user = request.session().attribute("user");
+      model.put("user", user);
+      model.put("users", User.all());
+      model.put("template", "templates/player2Login.vtl");
+      return new ModelAndView (model, layout);
+    }, new VelocityTemplateEngine());
+
+    post("/player2Login", (request, response) -> {
+      String inputPassword = request.queryParams("password");
+      String inputName = request.queryParams("name");
+      String inputPasswordHint = request.queryParams("passwordhint");
+      if(inputName.trim().length() > 0 && inputPassword.trim().length() > 0) {
+        User user = new User(inputName, inputPassword, "user");
+        user.save();
+        if(inputPasswordHint.length() > 0) {
+          user.assignPasswordHint(inputPasswordHint);
+        }
+      }
+      response.redirect("/player2Login");
+      return null;
+    });
+
+    post("/player2LoggedIn", (request, response) -> {
+      int player2Id = Integer.parseInt(request.queryParams("player2"));
+      User player2 = User.find(player2Id);
+      int player1score = 0;
+      int player2score = 0;
+      request.session().attribute("player2score", player2score);
+      request.session().attribute("player1score", player1score);
+      request.session().attribute("player2", player2);
+      int turn = 1;
+      request.session().attribute("turn", turn);
       response.redirect("/memoryBoard");
       return null;
     });
@@ -471,20 +512,16 @@ public class App {
     get("/memoryBoard", (request, response) -> {
       HashMap<String, Object> model = new HashMap<String, Object>();
       User user = request.session().attribute("user");
+      User player2 = request.session().attribute("player2");
+      int player1score = request.session().attribute("player1score");
+      int player2score = request.session().attribute("player2score");
       List<Card> cards = request.session().attribute("cards");
       int score = request.session().attribute("memoryScore");
+      model.put("player1score", player1score);
+      model.put("player2score", player2score);
       model.put("score", score);
       model.put("user", user);
-      model.put("cards", cards);
-      model.put("template", "templates/memoryBoard.vtl");
-      return new ModelAndView (model, layout);
-    }, new VelocityTemplateEngine());
-
-    get("/memoryBoard", (request, response) -> {
-      HashMap<String, Object> model = new HashMap<String, Object>();
-      User user = request.session().attribute("user");
-      List<Card> cards = request.session().attribute("cards");
-      model.put("user", user);
+      model.put("player2", player2);
       model.put("cards", cards);
       model.put("template", "templates/memoryBoard.vtl");
       return new ModelAndView (model, layout);
@@ -492,6 +529,7 @@ public class App {
 
     post("/memoryBoard", (request, response) -> {
       //score based on deck size, wrong guesses
+      User player2 = request.session().attribute("player2");
       List<Card> cards = request.session().attribute("cards");
       Card card = cards.get(Integer.parseInt(request.queryParams("cards")));
       card.updateShown();
@@ -505,14 +543,30 @@ public class App {
         request.session().attribute("firstCard", card);
       }
       if (counter == 2) {
+        int turn = request.session().attribute("turn");
         Card caard = request.session().attribute("firstCard");
         Card secondCard = cards.get(Integer.parseInt(request.queryParams("cards")));
         request.session().attribute("secondCard", secondCard);
         boolean cardMatch = caard.checkMatch(secondCard);
+
         if (cardMatch) {
-          int score = request.session().attribute("memoryScore");
-          score += 10;
-          request.session().attribute("memoryScore", score);
+          if(player2 != null) {
+            int player1score = request.session().attribute("player1score");
+            int player2score = request.session().attribute("player2score");
+            if (turn == 1) {
+              player1score += 1;
+              request.session().attribute("player1score", player1score);
+            }
+            if (turn == 2) {
+              player2score += 1;
+              request.session().attribute("player2score", player2score);
+            }
+          }
+          else {
+            int score = request.session().attribute("memoryScore");
+            score += 10;
+            request.session().attribute("memoryScore", score);
+          }
           caard.matched();
           caard.updateShown();
           secondCard.matched();
@@ -528,9 +582,21 @@ public class App {
             return null;
           }
         } else {
-          int score = request.session().attribute("memoryScore");
-          score -= 5;
-          request.session().attribute("memoryScore", score);
+          if (player2 != null) {
+            int score = request.session().attribute("memoryScore");
+            score -= 5;
+            request.session().attribute("memoryScore", score);
+          }
+          if (turn == 1) {
+            int player1score = request.session().attribute("player1score");
+            player1score -= 5;
+            request.session().attribute("player1score", player1score);
+          }
+          if (turn == 2) {
+            int player2score = request.session().attribute("player2score");
+            player2score -= 5;
+            request.session().attribute("player2score", player2score);
+          }
           response.redirect("/showCards");
           return null;
         }
