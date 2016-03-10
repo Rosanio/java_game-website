@@ -16,12 +16,11 @@ public class App {
 
       TimerTask task = new TimerTask(){
         public void run(){
-          System.out.println(globalUserId);
           if (globalUserId != null){
-            System.out.println(globalUserId);
             Tamagotchi newTama = Tamagotchi.find(User.find(globalUserId).getTamagotchiId());
             if (newTama != null){
-              System.out.println(globalUserId);
+              System.out.println((Tamagotchi.find(User.find(globalUserId).getTamagotchiId())).getAge());
+              System.out.println((Tamagotchi.find(User.find(globalUserId).getTamagotchiId())).isAlive());
               newTama.updateAge();
               newTama.isAlive();
             }
@@ -30,12 +29,11 @@ public class App {
       };
       Timer timer = new Timer();
       long delay = 0;
-      long intervalPeriod = 100;
+      long intervalPeriod = 1000;
       timer.scheduleAtFixedRate(task, delay, intervalPeriod);
 //user info & game page
     get("/", (request, response) -> {
       HashMap<String, Object> model = new HashMap<String, Object>();
-      globalUserId = 0;
       request.session().attribute("user", null);
       model.put("template", "templates/index.vtl");
       return new ModelAndView (model, layout);
@@ -350,6 +348,9 @@ public class App {
       HashMap<String, Object> model = new HashMap<String, Object>();
       User user = request.session().attribute("user");
       Tamagotchi tamagotchi = Tamagotchi.find(User.find(globalUserId).getTamagotchiId());
+      if (!tamagotchi.isAlive()){
+        User.find(globalUserId).clearTamagotchi();
+      }
       model.put("tamagotchi", tamagotchi);
       model.put("user", user);
       model.put("template", "templates/newtamagotchi.vtl");
@@ -465,7 +466,7 @@ public class App {
         counter += 1;
       }
       String players = request.queryParams("players");
-      
+
       request.session().attribute("cards", cardDeck);
       response.redirect("/memoryBoard");
       return null;
