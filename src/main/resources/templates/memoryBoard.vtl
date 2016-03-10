@@ -1,11 +1,16 @@
 #if ($player2)
+  #if($turn == 1)
+<h1>$user.getName()'s Turn</h1>
+  #else
+<h1>$player2.getName()'s Turn</h1>
+  #end
 <div class="row">
   <div class="col-md-6">
-    <h3>Player 1</h3>
+    <h3>$user.getName()</h3>
     <p>Score: $player1score</p>
   </div>
   <div class="col-md-6">
-    <h3>Player 2</h3>
+    <h3>$player2.getName()</h3>
     <p>Score: $player2score</p>
   </div>
 </div>

@@ -523,6 +523,7 @@ public class App {
       model.put("user", user);
       model.put("player2", player2);
       model.put("cards", cards);
+      model.put("turn", request.session().attribute("turn"));
       model.put("template", "templates/memoryBoard.vtl");
       return new ModelAndView (model, layout);
     }, new VelocityTemplateEngine());
@@ -561,6 +562,13 @@ public class App {
               player2score += 1;
               request.session().attribute("player2score", player2score);
             }
+            if(turn == 1) {
+              turn = 2;
+              request.session().attribute("turn", turn);
+            } else {
+              turn = 1;
+              request.session().attribute("turn", turn);
+            }
           }
           else {
             int score = request.session().attribute("memoryScore");
@@ -582,24 +590,23 @@ public class App {
             return null;
           }
         } else {
-          if (player2 != null) {
+          if (player2 == null) {
             int score = request.session().attribute("memoryScore");
             score -= 5;
             request.session().attribute("memoryScore", score);
-          }
-          if (turn == 1) {
-            int player1score = request.session().attribute("player1score");
-            player1score -= 5;
-            request.session().attribute("player1score", player1score);
-          }
-          if (turn == 2) {
-            int player2score = request.session().attribute("player2score");
-            player2score -= 5;
-            request.session().attribute("player2score", player2score);
+          } else {
+            if(turn == 1) {
+              turn = 2;
+              request.session().attribute("turn", turn);
+            } else {
+              turn = 1;
+              request.session().attribute("turn", turn);
+            }
           }
           response.redirect("/showCards");
           return null;
         }
+
       }
       request.session().attribute("cards", cards);
       response.redirect("/memoryBoard");
@@ -609,11 +616,16 @@ public class App {
     get("/showCards", (request, response) -> {
       HashMap<String, Object> model = new HashMap<String, Object>();
       User user = request.session().attribute("user");
+      User player2 = request.session().attribute("player2");
       List<Card> cards = request.session().attribute("cards");
       int score = request.session().attribute("memoryScore");
       model.put("score", score);
       model.put("user", user);
+      model.put("player1score", request.session().attribute("player1score"));
+      model.put("player2score", request.session().attribute("player2score"));
+      model.put("player2", player2);
       model.put("cards", cards);
+      model.put("turn", request.session().attribute("turn"));
       model.put("template", "templates/showCards.vtl");
       return new ModelAndView (model, layout);
     }, new VelocityTemplateEngine());
@@ -632,13 +644,21 @@ public class App {
     get("/memoryGameOver", (request, response) -> {
       HashMap<String, Object> model = new HashMap<String, Object>();
       User user = request.session().attribute("user");
+      User player2 = request.session().attribute("player2");
       int score = request.session().attribute("memoryScore");
       int cardNumber = Integer.parseInt(request.session().attribute("cardNumber"));
       score += cardNumber*10;
-      user.updateMemoryScore(score);
+      if (score > user.getMemoryHighScore()) {
+        user.updateMemoryScore(score);
+        String congrats = "Congratulations you set a new record!";
+        model.put("congrats", congrats);
+      }
       request.session().attribute("memoryScore", score);
       model.put("score", score);
       model.put("user", user);
+      model.put("player2", player2);
+      model.put("player1score", request.session().attribute("player1score"));
+      model.put("player2score", request.session().attribute("player2score"));
       model.put("users", User.getMemoryHighScores());
       model.put("template", "templates/memoryGameOver.vtl");
       return new ModelAndView (model, layout);
