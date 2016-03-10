@@ -461,6 +461,8 @@ public class App {
         card.assignOrderId(counter);
         counter += 1;
       }
+      String players = request.queryParams("players");
+      
       request.session().attribute("cards", cardDeck);
       response.redirect("/memoryBoard");
       return null;
