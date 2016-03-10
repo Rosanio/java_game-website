@@ -21,7 +21,7 @@ body {
   margin-left: 43%;
 }
 
-.simonButton {
+.gameButton {
   margin-left: 43%;
 }
 
@@ -97,4 +97,44 @@ ul.img-wrapper li {
 #tamagotchiimg {
   height: 150px;
   width: auto;
+}
+.deckForm{
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-flow: row wrap;
+  align-content: flex-start;
+}
+
+.card {
+  font-size: 60px;
+  text-align: center;
+  padding: 10px;
+  margin: 4px;
+  /* card sizing */
+  height: 200px;
+  width: 140px;
+  background: white;
+  background-image: url("/images/cardback.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  justify-content: center;
+  align-items: center;
+
+}
+
+.card_front {
+  font-size: 60px;
+  text-align: center;
+  padding: 10px;
+  margin: 4px;
+  /* card sizing */
+  height: 200px;
+  width: 140px;
+  background: white;
+  background-image: url("/images/card_front.jpg");
+  background-position: center;
+  background-repeat: repeat;
+
 }

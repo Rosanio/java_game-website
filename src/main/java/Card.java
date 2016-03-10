@@ -5,19 +5,34 @@ public class Card {
   private int id;
   private String symbol;
   private boolean shown;
+  private int order_id;
+  private boolean match;
 
   public Card (String symbol) {
     this.id = id;
     this.symbol = symbol;
     this.shown = false;
+    this.match = false;
   }
 
   public int getId() {
     return id;
   }
 
+  public int getOrderId() {
+    return order_id;
+  }
+
   public String getSymbol() {
     return symbol;
+  }
+
+  public boolean getShown() {
+    return shown;
+  }
+
+  public boolean getMatch() {
+    return match;
   }
 
   public static List<Card> all() {
@@ -74,18 +89,37 @@ public class Card {
   //shuffle
   public static List<Card> makeListOfCards(int limit) {
     try(Connection con = DB.sql2o.open()) {
-      String sql = "SELECT * FROM cards LIMIT :limit";
+      String sql = "SELECT * FROM cards ORDER BY id LIMIT :limit";
       return con.createQuery(sql).addParameter("limit", limit).executeAndFetch(Card.class);
     }
   }
 
   public static void fillDatabase() {
-    String[] symbols = {"⌛️", "🌈", "🎾", "🐤", "👍", "✊", "👻", "💚", "💰", "🚴", "🖕", "🐼", "🦄", "🎎", "", "🐠", "🍷", "🐈", "🐷", "😈", "👯", "💃", "🐮", "🌟", "🍡", "🎀"};
+    String[] symbols = {"⌛️", "🌈", "🎾", "🐤", "👍", "✊", "👻", "💚", "💰", "🚴", "🖕", "🐼", "🦄", "🎎", "🙌", "🐠", "🍷", "🐈", "🐷", "😈", "👯", "💃", "🐮", "🌟", "🍡", "🎀"};
     for(String symbol : symbols) {
       Card newCard = new Card(symbol);
       newCard.save();
       Card newCard2 = new Card(symbol);
       newCard2.save();
     }
+  }
+
+  public boolean isShown() {
+    if(this.shown) {
+      return false;
+    }
+    return true;
+  }
+
+  public void updateShown() {
+    this.shown = this.isShown();
+  }
+
+  public void assignOrderId(int order_id) {
+    this.order_id = order_id;
+  }
+
+  public void matched() {
+    this.match = true;
   }
 }

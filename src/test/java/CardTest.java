@@ -73,15 +73,11 @@ public class CardTest {
     assertEquals(Card.all().size(), 1);
   }
 
-  // @Test
-  // public void generateRandomBoard_removesCardPairFromDatabase() {
-  //   Card newCard = new Card("Matt");
-  //   newCard.save();
-  //   Card newCard2 = new Card("Matt");
-  //   newCard2.save();
-  //   Card newCard3 = new Card("X");
-  //   newCard3.save();
-  //   List<Card> cards = Card.generateRandomBoard();
-  //   assertEquals(cards.get(1).getSymbol(), newCard.getSymbol());
-  // }
+  @Test
+  public void makeListOfCards_generatesListOfCardsFromDatabase() {
+    Card.fillDatabase();
+    List<Card> cards = Card.makeListOfCards(16);
+    assertEquals(cards.get(0).getSymbol(), "⌛️");
+    assertEquals(cards.get(1).getSymbol(), "2");
+  }
 }

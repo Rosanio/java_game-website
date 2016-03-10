@@ -19,7 +19,6 @@ public class Tamagotchi {
   private String sleepStatus;
   private String hungerStatus;
   private String happyStatus;
-  private long birthday;
 //getters & constructor
   public Tamagotchi(String tamagotchiName){
     Random randomNumberGenerator = new Random();
@@ -35,7 +34,6 @@ public class Tamagotchi {
     hunger_level = 4;
     happy_level = 8;
     alive = true;
-    // this.birthday = System.getCurrentTimeMillis();
   }
 
   public String getName(){
@@ -98,10 +96,6 @@ public class Tamagotchi {
     }
     return happyStatus;
   }
-
-  public long getBirthday() {
-    return birthday;
-  }
 //life/age status
   public boolean isAlive(){
     if (hunger_level == 0 || age >= 90){
@@ -129,7 +123,7 @@ public class Tamagotchi {
 
   public void save(){
     try(Connection con = DB.sql2o.open()){
-      String sql = "INSERT INTO tamagotchis (name, age, gender, sleep_level, hunger_level, happy_level, alive, birthday) VALUES (:name, :age, :gender, :sleep_level, :hunger_level, :happy_level, true, :birthday)";
+      String sql = "INSERT INTO tamagotchis (name, age, gender, sleep_level, hunger_level, happy_level, alive) VALUES (:name, :age, :gender, :sleep_level, :hunger_level, :happy_level, true)";
       this.id = (int) con.createQuery(sql, true)
       .addParameter("name", name)
       .addParameter("age", age)
@@ -137,7 +131,6 @@ public class Tamagotchi {
       .addParameter("sleep_level", sleep_level)
       .addParameter("hunger_level", hunger_level)
       .addParameter("happy_level", happy_level)
-      .addParameter("birthday", birthday)
       .executeUpdate()
       .getKey();
     }

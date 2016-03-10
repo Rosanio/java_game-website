@@ -10,12 +10,15 @@ public class User {
   private String profilepic;
   private int simon_high_score;
   private static int tamagotchi_id;
+  private int memory_high_score;
+  private int points;
 
   public User(String name, String password, String permissions) {
     this.name = name;
     this.password = password;
     this.permissions = permissions;
     this.simon_high_score = 0;
+    this.memory_high_score = 0;
   }
 
   public int getId() {
@@ -50,6 +53,10 @@ public class User {
     return simon_high_score;
   }
 
+  public int getMemoryHighScore() {
+    return memory_high_score;
+  }
+
   public static List<User> all() {
     try(Connection con = DB.sql2o.open()) {
       String sql = "SELECT * FROM users";
@@ -69,7 +76,7 @@ public class User {
 
   public void save() {
     try(Connection con = DB.sql2o.open()) {
-      String sql = "INSERT INTO users (name, password, permissions, simon_high_score) VALUES (:name, :password, :permissions, 0)";
+      String sql = "INSERT INTO users (name, password, permissions, simon_high_score, memory_high_score) VALUES (:name, :password, :permissions, 0, 0)";
       this.id = (int) con.createQuery(sql, true).addParameter("name", name).addParameter("password", password).addParameter("permissions", permissions).executeUpdate().getKey();
     }
   }
@@ -133,11 +140,20 @@ public class User {
     }
   }
 
+
   public void updateTamagotchi(int tamagotchiId) {
     this.tamagotchi_id = tamagotchiId;
     try(Connection con = DB.sql2o.open()) {
       String sql = "UPDATE users SET tamagotchi_id = :tamagotchi_id WHERE id = :id" ;
       con.createQuery(sql).addParameter("id", id).addParameter("tamagotchi_id", tamagotchiId).executeUpdate();
+    }
+  }
+
+  public void updateMemoryScore(int memory_high_score) {
+    this.simon_high_score = simon_high_score;
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "UPDATE users SET memory_high_score = :memory_high_score WHERE id = :id" ;
+      con.createQuery(sql).addParameter("id", id).addParameter("memory_high_score", memory_high_score).executeUpdate();
     }
   }
 
@@ -152,6 +168,13 @@ public class User {
   public static List<User> getSimonHighScores() {
     try(Connection con = DB.sql2o.open()) {
       String sql = "SELECT * FROM users ORDER BY simon_high_score DESC LIMIT 10" ;
+      return con.createQuery(sql).executeAndFetch(User.class);
+    }
+  }
+
+  public static List<User> getMemoryHighScores() {
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "SELECT * FROM users ORDER BY memory_high_score ASC LIMIT 10" ;
       return con.createQuery(sql).executeAndFetch(User.class);
     }
   }
