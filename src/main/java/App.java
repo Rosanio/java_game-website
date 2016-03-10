@@ -309,7 +309,7 @@ public class App {
       HashMap<String, Object> model = new HashMap<String, Object>();
       User user = request.session().attribute("user");
       model.put("user", user);
-      // model.put("users", User.getSimonHighScores());
+      model.put("users", User.getMemoryHighScores());
       model.put("template", "templates/memory.vtl");
       return new ModelAndView (model, layout);
     }, new VelocityTemplateEngine());
@@ -317,8 +317,10 @@ public class App {
     post("/memory", (request, response) -> {
       Card.delete();
       Card.fillDatabase();
-      System.out.println(request.queryParams("cardNumber"));
       List<Card> cards = Card.makeListOfCards(Integer.parseInt(request.queryParams("cardNumber")));
+      int memoryScore = Integer.parseInt(request.queryParams("cardNumber"))*10;
+      request.session().attribute("memoryScore", memoryScore);
+      request.session().attribute("cardNumber", request.queryParams("cardNumber"));
       Collections.shuffle(cards);
       int counter = 0;
       for(Card card : cards) {
@@ -334,7 +336,8 @@ public class App {
       HashMap<String, Object> model = new HashMap<String, Object>();
       User user = request.session().attribute("user");
       List<Card> cards = request.session().attribute("cards");
-
+      int score = request.session().attribute("memoryScore");
+      model.put("score", score);
       model.put("user", user);
       model.put("cards", cards);
       // model.put("users", User.getSimonHighScores());
@@ -343,6 +346,7 @@ public class App {
     }, new VelocityTemplateEngine());
 
     post("/memoryBoard", (request, response) -> {
+      //score based on deck size, wrong guesses
       List<Card> cards = request.session().attribute("cards");
       Card card = cards.get(Integer.parseInt(request.queryParams("cards")));
       card.updateShown();
@@ -361,6 +365,9 @@ public class App {
         request.session().attribute("secondCard", secondCard);
         boolean cardMatch = caard.checkMatch(secondCard);
         if (cardMatch) {
+          int score = request.session().attribute("memoryScore");
+          score += 10;
+          request.session().attribute("memoryScore", score);
           caard.matched();
           caard.updateShown();
           secondCard.matched();
@@ -376,6 +383,9 @@ public class App {
             return null;
           }
         } else {
+          int score = request.session().attribute("memoryScore");
+          score -= 5;
+          request.session().attribute("memoryScore", score);
           response.redirect("/showCards");
           return null;
         }
@@ -389,7 +399,8 @@ public class App {
       HashMap<String, Object> model = new HashMap<String, Object>();
       User user = request.session().attribute("user");
       List<Card> cards = request.session().attribute("cards");
-
+      int score = request.session().attribute("memoryScore");
+      model.put("score", score);
       model.put("user", user);
       model.put("cards", cards);
       // model.put("users", User.getSimonHighScores());
@@ -411,8 +422,14 @@ public class App {
     get("/memoryGameOver", (request, response) -> {
       HashMap<String, Object> model = new HashMap<String, Object>();
       User user = request.session().attribute("user");
-
+      int score = request.session().attribute("memoryScore");
+      int cardNumber = Integer.parseInt(request.session().attribute("cardNumber"));
+      score += cardNumber*10;
+      user.updateMemoryScore(score);
+      request.session().attribute("memoryScore", score);
+      model.put("score", score);
       model.put("user", user);
+      model.put("users", User.getMemoryHighScores());
       // model.put("users", User.getSimonHighScores());
       model.put("template", "templates/memoryGameOver.vtl");
       return new ModelAndView (model, layout);

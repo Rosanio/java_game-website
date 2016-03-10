@@ -21,7 +21,7 @@ body {
   margin-left: 43%;
 }
 
-.simonButton {
+.gameButton {
   margin-left: 43%;
 }
 
@@ -88,10 +88,6 @@ ul.img-wrapper li {
   margin: 0 1em 1em 0;
   position: relative;
   width: 250px;
-}
-
-.container {
-  width: 95%;
 }
 
 .deckForm{
