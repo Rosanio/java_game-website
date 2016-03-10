@@ -22,20 +22,12 @@ public class App {
             System.out.println(newTama.getName());
             newTama.updateAge();
             newTama.isAlive();
-            System.out.println(newTama.getAge());
-            System.out.println(newTama.isAlive());
-
-            }
-          // newTama.updateAge();
-          // newTama.isAlive();
-          // System.out.println(newTama.getId());
-          // System.out.println(newTama.getAge());
-          // System.out.println(newTama.isAlive());
+          }
         }
       };
       Timer timer = new Timer();
       long delay = 0;
-      long intervalPeriod = 1000;
+      long intervalPeriod = 100;
       timer.scheduleAtFixedRate(task, delay, intervalPeriod);
 //user info & game page
     get("/", (request, response) -> {
