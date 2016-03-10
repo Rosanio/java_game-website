@@ -10,7 +10,7 @@
       <button value="newPet" name="action" type="submit" class="btn btn-info">Create a new pet</button>
     </form>
   #elseif ($tamagotchi.getAge() < 30)
-    <img src="/images/babytama.jpg" id="tamagotchiimg">
+    <img src="/images/babytama.gif" id="tamagotchiimg">
     <h4>Your pet is $tamagotchi.getHungerStat(), $tamagotchi.getSleepStat(), and $tamagotchi.getHappyStat().</h4>
     <form action="/tamagotchiupdate/$tamagotchi.getId()" method="post">
       <label for="action">What would you like to do with $tamagotchi.getName()?</label>
@@ -20,7 +20,7 @@
       <button value="sleep" name="action" type="submit" class="btn btn-info">Put to bed</button>
     </form>
   #elseif ($tamagotchi.getAge() < 60 || $tamagotchi.getAge() >= 30)
-    <img src="/images/midtama.jpg" id="tamagotchiimg">
+    <img src="/images/midtama.gif" id="tamagotchiimg">
     <h4>Your pet is $tamagotchi.getHungerStat(), $tamagotchi.getSleepStat(), and $tamagotchi.getHappyStat().</h4>
     <form action="/tamagotchiupdate/$tamagotchi.getId()" method="post">
       <label for="action">What would you like to do with $tamagotchi.getName()?</label>
@@ -30,7 +30,7 @@
       <button value="sleep" name="action" type="submit" class="btn btn-info">Put to bed</button>
     </form>
   #else ($tamagotchi.getAge() < 90 || $tamagotchi.getAge() >= 60)
-    <img src="/images/adulttama.jpg" id="tamagotchiimg">
+    <img src="/images/adulttama.gif" id="tamagotchiimg">
     <h4>Your pet is $tamagotchi.getHungerStat(), $tamagotchi.getSleepStat(), and $tamagotchi.getHappyStat().</h4>
     <form action="/tamagotchiupdate/$tamagotchi.getId()" method="post">
       <label for="action">What would you like to do with $tamagotchi.getName()?</label>

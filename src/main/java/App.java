@@ -16,9 +16,12 @@ public class App {
 
       TimerTask task = new TimerTask(){
         public void run(){
+          System.out.println(globalUserId);
           if (globalUserId != null){
+            System.out.println(globalUserId);
             Tamagotchi newTama = Tamagotchi.find(User.find(globalUserId).getTamagotchiId());
             if (newTama != null){
+              System.out.println(globalUserId);
               newTama.updateAge();
               newTama.isAlive();
             }
@@ -27,7 +30,7 @@ public class App {
       };
       Timer timer = new Timer();
       long delay = 0;
-      long intervalPeriod = 60000;
+      long intervalPeriod = 100;
       timer.scheduleAtFixedRate(task, delay, intervalPeriod);
 //user info & game page
     get("/", (request, response) -> {
