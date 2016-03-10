@@ -90,6 +90,14 @@ ul.img-wrapper li {
   width: 250px;
 }
 
+.tamagotchiContainer {
+  text-align: center;
+}
+
+#tamagotchiimg {
+  height: 150px;
+  width: auto;
+}
 .deckForm{
   width: 100%;
   min-height: 100vh;

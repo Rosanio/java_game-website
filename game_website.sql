@@ -36,7 +36,8 @@ SET default_with_oids = false;
 CREATE TABLE cards (
     id integer NOT NULL,
     symbol character varying,
-    shown boolean
+    shown boolean,
+    match boolean
 );
 
 
@@ -61,6 +62,45 @@ ALTER TABLE cards_id_seq OWNER TO "Guest";
 --
 
 ALTER SEQUENCE cards_id_seq OWNED BY cards.id;
+
+
+--
+-- Name: tamagotchis; Type: TABLE; Schema: public; Owner: Guest; Tablespace: 
+--
+
+CREATE TABLE tamagotchis (
+    id integer NOT NULL,
+    name character varying,
+    age integer,
+    gender character varying,
+    sleep_level integer,
+    hunger_level integer,
+    happy_level integer,
+    alive boolean
+);
+
+
+ALTER TABLE tamagotchis OWNER TO "Guest";
+
+--
+-- Name: tamagotchis_id_seq; Type: SEQUENCE; Schema: public; Owner: Guest
+--
+
+CREATE SEQUENCE tamagotchis_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE tamagotchis_id_seq OWNER TO "Guest";
+
+--
+-- Name: tamagotchis_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: Guest
+--
+
+ALTER SEQUENCE tamagotchis_id_seq OWNED BY tamagotchis.id;
 
 
 --
@@ -109,7 +149,10 @@ CREATE TABLE users (
     permissions character varying,
     passwordhint character varying,
     simon_high_score integer,
-    profilepic character varying
+    profilepic character varying,
+    tamagotchi_id integer,
+    memory_high_score integer,
+    points integer
 );
 
 
@@ -147,6 +190,13 @@ ALTER TABLE ONLY cards ALTER COLUMN id SET DEFAULT nextval('cards_id_seq'::regcl
 -- Name: id; Type: DEFAULT; Schema: public; Owner: Guest
 --
 
+ALTER TABLE ONLY tamagotchis ALTER COLUMN id SET DEFAULT nextval('tamagotchis_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: Guest
+--
+
 ALTER TABLE ONLY turns ALTER COLUMN id SET DEFAULT nextval('turns_id_seq'::regclass);
 
 
@@ -161,59 +211,59 @@ ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regcl
 -- Data for Name: cards; Type: TABLE DATA; Schema: public; Owner: Guest
 --
 
-COPY cards (id, symbol, shown) FROM stdin;
-313	⌛️	f
-315	🌈	f
-317	🎾	f
-319	🐤	f
-321	👍	f
-323	✊	f
-325	👻	f
-327	💚	f
-329	💰	f
-331	🚴	f
-333	🖕	f
-335	🐼	f
-337	🦄	f
-339	🎎	f
-341		f
-343	🐠	f
-345	🍷	f
-347	🐈	f
-349	🐷	f
-351	😈	f
-353	👯	f
-355	💃	f
-357	🐮	f
-359	🌟	f
-361	🍡	f
-363	🎀	f
-314	⌛️	f
-316	🌈	f
-318	🎾	f
-320	🐤	f
-322	👍	f
-324	✊	f
-326	👻	f
-328	💚	f
-330	💰	f
-332	🚴	f
-334	🖕	f
-336	🐼	f
-338	🦄	f
-340	🎎	f
-342		f
-344	🐠	f
-346	🍷	f
-348	🐈	f
-350	🐷	f
-352	😈	f
-354	👯	f
-356	💃	f
-358	🐮	f
-360	🌟	f
-362	🍡	f
-364	🎀	f
+COPY cards (id, symbol, shown, match) FROM stdin;
+781	⌛️	f	\N
+783	🌈	f	\N
+785	🎾	f	\N
+787	🐤	f	\N
+789	👍	f	\N
+791	✊	f	\N
+793	👻	f	\N
+795	💚	f	\N
+797	💰	f	\N
+799	🚴	f	\N
+801	🖕	f	\N
+803	🐼	f	\N
+805	🦄	f	\N
+807	🎎	f	\N
+809		f	\N
+811	🐠	f	\N
+813	🍷	f	\N
+815	🐈	f	\N
+817	🐷	f	\N
+819	😈	f	\N
+821	👯	f	\N
+823	💃	f	\N
+825	🐮	f	\N
+827	🌟	f	\N
+829	🍡	f	\N
+831	🎀	f	\N
+782	⌛️	f	\N
+784	🌈	f	\N
+786	🎾	f	\N
+788	🐤	f	\N
+790	👍	f	\N
+792	✊	f	\N
+794	👻	f	\N
+796	💚	f	\N
+798	💰	f	\N
+800	🚴	f	\N
+802	🖕	f	\N
+804	🐼	f	\N
+806	🦄	f	\N
+808	🎎	f	\N
+810		f	\N
+812	🐠	f	\N
+814	🍷	f	\N
+816	🐈	f	\N
+818	🐷	f	\N
+820	😈	f	\N
+822	👯	f	\N
+824	💃	f	\N
+826	🐮	f	\N
+828	🌟	f	\N
+830	🍡	f	\N
+832	🎀	f	\N
 \.
 
 
@@ -221,7 +271,23 @@ COPY cards (id, symbol, shown) FROM stdin;
 -- Name: cards_id_seq; Type: SEQUENCE SET; Schema: public; Owner: Guest
 --
 
-SELECT pg_catalog.setval('cards_id_seq', 364, true);
+SELECT pg_catalog.setval('cards_id_seq', 832, true);
+
+
+--
+-- Data for Name: tamagotchis; Type: TABLE DATA; Schema: public; Owner: Guest
+--
+
+COPY tamagotchis (id, name, age, gender, sleep_level, hunger_level, happy_level, alive) FROM stdin;
+49	safdaf	99	Male	12	0	11	f
+\.
+
+
+--
+-- Name: tamagotchis_id_seq; Type: SEQUENCE SET; Schema: public; Owner: Guest
+--
+
+SELECT pg_catalog.setval('tamagotchis_id_seq', 49, true);
 
 
 --
@@ -229,17 +295,6 @@ SELECT pg_catalog.setval('cards_id_seq', 364, true);
 --
 
 COPY turns (id, comp_turn, user_turn, shown) FROM stdin;
-271	blue	\N	t
-272	red	\N	t
-273	yellow	\N	t
-270	yellow	green	t
-263	green	\N	t
-264	green	\N	t
-265	yellow	\N	t
-266	yellow	\N	t
-267	green	\N	t
-268	green	\N	t
-269	yellow	\N	t
 \.
 
 
@@ -247,20 +302,15 @@ COPY turns (id, comp_turn, user_turn, shown) FROM stdin;
 -- Name: turns_id_seq; Type: SEQUENCE SET; Schema: public; Owner: Guest
 --
 
-SELECT pg_catalog.setval('turns_id_seq', 273, true);
+SELECT pg_catalog.setval('turns_id_seq', 322, true);
 
 
 --
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: Guest
 --
 
-COPY users (id, name, password, permissions, passwordhint, simon_high_score, profilepic) FROM stdin;
-6	Anna	123	user	numbers	140	\N
-7	matt2	123	user	\N	3	\N
-10	matt5	123	user	\N	0	\N
-11	matt	123	user	not123	360	\N
-12	charlie	123	user	123	12	http://cps-static.rovicorp.com/3/JPG_400/MI0001/458/MI0001458042.jpg?partner=allrovi.com
-13	mbrecoon	333	user	333	110	\N
+COPY users (id, name, password, permissions, passwordhint, simon_high_score, profilepic, tamagotchi_id, memory_high_score, points) FROM stdin;
+16	izzy	12345	user	\N	0	\N	49	\N	\N
 \.
 
 
@@ -268,7 +318,7 @@ COPY users (id, name, password, permissions, passwordhint, simon_high_score, pro
 -- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: Guest
 --
 
-SELECT pg_catalog.setval('users_id_seq', 13, true);
+SELECT pg_catalog.setval('users_id_seq', 16, true);
 
 
 --
@@ -277,6 +327,14 @@ SELECT pg_catalog.setval('users_id_seq', 13, true);
 
 ALTER TABLE ONLY cards
     ADD CONSTRAINT cards_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: tamagotchis_pkey; Type: CONSTRAINT; Schema: public; Owner: Guest; Tablespace: 
+--
+
+ALTER TABLE ONLY tamagotchis
+    ADD CONSTRAINT tamagotchis_pkey PRIMARY KEY (id);
 
 
 --
