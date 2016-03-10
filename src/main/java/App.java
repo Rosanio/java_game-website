@@ -17,6 +17,7 @@ public class App {
       TimerTask task = new TimerTask(){
         public void run(){
           System.out.println(globalUserId);
+          System.out.println(User.find(globalUserId).getTamagotchiId());
           if (globalUserId != null){
             Tamagotchi newTama = Tamagotchi.find(User.find(globalUserId).getTamagotchiId());
             if (newTama != null){
@@ -33,6 +34,8 @@ public class App {
 //user info & game page
     get("/", (request, response) -> {
       HashMap<String, Object> model = new HashMap<String, Object>();
+      globalUserId = 0;
+      request.session().attribute("user", null);
       model.put("template", "templates/index.vtl");
       return new ModelAndView (model, layout);
     }, new VelocityTemplateEngine());
@@ -100,6 +103,7 @@ public class App {
 
     get("/games", (request, response) -> {
       HashMap<String, Object> model = new HashMap<String, Object>();
+      System.out.println(globalUserId);
       User user = request.session().attribute("user");
       model.put("user", user);
       model.put("template", "templates/games.vtl");
@@ -330,7 +334,10 @@ public class App {
     get("/tamagotchi", (request, response) -> {
       HashMap<String, Object> model = new HashMap<String, Object>();
       User user = request.session().attribute("user");
-      Tamagotchi.delete();
+      if (User.find(globalUserId).getTamagotchiId() != 0){
+        response.redirect("/newtamagotchi");
+        return null;
+      }
       User.clearTamagotchi();
       model.put("user", user);
       model.put("template", "templates/tamagotchi.vtl");
@@ -340,6 +347,10 @@ public class App {
     get("/newtamagotchi", (request, response) -> {
       HashMap<String, Object> model = new HashMap<String, Object>();
       User user = request.session().attribute("user");
+      System.out.println(User.find(globalUserId).getId());
+      System.out.println(User.find(globalUserId).getTamagotchiId());
+      Tamagotchi tamagotchi = Tamagotchi.find(User.find(globalUserId).getTamagotchiId());
+      model.put("tamagotchi", tamagotchi);
       model.put("user", user);
       model.put("template", "templates/newtamagotchi.vtl");
       return new ModelAndView (model, layout);
