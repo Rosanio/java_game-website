@@ -10,6 +10,7 @@ import static spark.Spark.*;
 
 public class App {
   public static Integer globalUserId;
+  public static long intervalPeriod = 1000;
   public static void main(String[] args) {
     staticFileLocation("/public");
     String layout = "templates/layout.vtl";
@@ -18,7 +19,7 @@ public class App {
         public void run(){
           if (globalUserId != null){
             Tamagotchi newTama = Tamagotchi.find(User.find(globalUserId).getTamagotchiId());
-            if (newTama != null){
+            if (newTama != null && newTama.isAlive()){
               System.out.println((Tamagotchi.find(User.find(globalUserId).getTamagotchiId())).getAge());
               System.out.println((Tamagotchi.find(User.find(globalUserId).getTamagotchiId())).isAlive());
               newTama.updateAge();
@@ -29,7 +30,6 @@ public class App {
       };
       Timer timer = new Timer();
       long delay = 0;
-      long intervalPeriod = 1000;
       timer.scheduleAtFixedRate(task, delay, intervalPeriod);
 //user info & game page
     get("/", (request, response) -> {
@@ -361,6 +361,14 @@ public class App {
       HashMap<String, Object> model = new HashMap<String, Object>();
       User user = request.session().attribute("user");
       String name = request.queryParams("name");
+      int gameSpeed = Integer.parseInt(request.queryParams("gameSpeed"));
+      if (gameSpeed == 1){
+        intervalPeriod = 1000;
+      } else if (gameSpeed == 2){
+        intervalPeriod = 60000;
+      } else {
+        intervalPeriod = 100000;
+      }
       Tamagotchi tamagotchi = new Tamagotchi(name);
       tamagotchi.save();
       user.updateTamagotchi(tamagotchi.getId());
@@ -376,8 +384,9 @@ public class App {
       int id = Integer.parseInt(request.params("id"));
       Tamagotchi tamagotchi = Tamagotchi.find(id);
       String action = request.queryParams("action");
-      if (!tamagotchi.isAlive()){
-        User.find(globalUserId).clearTamagotchi();
+      if(tamagotchi.isAlive() == false){
+        response.redirect("/newtamagotchi");
+        return null;
       }
       if (action.equals("feed")){
         tamagotchi.updateOnFeed();
