@@ -28,7 +28,7 @@ public class App {
       };
       Timer timer = new Timer();
       long delay = 0;
-      long intervalPeriod = 100;
+      long intervalPeriod = 60000;
       timer.scheduleAtFixedRate(task, delay, intervalPeriod);
 //user info & game page
     get("/", (request, response) -> {

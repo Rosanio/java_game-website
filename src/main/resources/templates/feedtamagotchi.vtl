@@ -19,7 +19,7 @@
       <button value="play" name="action" type="submit" class="btn btn-info">Play</button>
       <button value="sleep" name="action" type="submit" class="btn btn-info">Put to bed</button>
     </form>
-  #elseif ($tamagotchi.getAge() < 60 || $tamagotchi.getAge() >= 30)
+  #elseif ($tamagotchi.getAge() < 60 && $tamagotchi.getAge() >= 30)
     <img src="/images/midtama.jpg" id="tamagotchiimg">
     <h4>Your pet is $tamagotchi.getHungerStat(), $tamagotchi.getSleepStat(), and $tamagotchi.getHappyStat().</h4>
     <form action="/tamagotchiupdate/$tamagotchi.getId()" method="post">
@@ -29,7 +29,7 @@
       <button value="play" name="action" type="submit" class="btn btn-info">Play</button>
       <button value="sleep" name="action" type="submit" class="btn btn-info">Put to bed</button>
     </form>
-  #elseif ($tamagotchi.getAge() < 90 || $tamagotchi.getAge() >= 60)
+  #elseif ($tamagotchi.getAge() < 90 && $tamagotchi.getAge() >= 60)
     <img src="/images/adulttama.jpg" id="tamagotchiimg">
     <h4>Your pet is $tamagotchi.getHungerStat(), $tamagotchi.getSleepStat(), and $tamagotchi.getHappyStat().</h4>
     <form action="/tamagotchiupdate/$tamagotchi.getId()" method="post">
