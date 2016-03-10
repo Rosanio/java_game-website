@@ -32,6 +32,8 @@ public class App {
 //user info & game page
     get("/", (request, response) -> {
       HashMap<String, Object> model = new HashMap<String, Object>();
+      globalUserId = 0;
+      request.session().attribute("user", null);
       model.put("template", "templates/index.vtl");
       return new ModelAndView (model, layout);
     }, new VelocityTemplateEngine());
@@ -99,6 +101,7 @@ public class App {
 
     get("/games", (request, response) -> {
       HashMap<String, Object> model = new HashMap<String, Object>();
+      System.out.println(globalUserId);
       User user = request.session().attribute("user");
       System.out.println(globalUserId);
       System.out.println(User.find(globalUserId).getTamagotchiId());
@@ -396,6 +399,7 @@ public class App {
       User user = request.session().attribute("user");
       int id = Integer.parseInt(request.params("id"));
       Tamagotchi tamagotchi = Tamagotchi.find(id);
+      model.put("user", user);
       model.put("tamagotchi", tamagotchi);
       model.put("user", user);
       model.put("template", "templates/feedtamagotchi.vtl");
@@ -407,6 +411,7 @@ public class App {
       User user = request.session().attribute("user");
       int id = Integer.parseInt(request.params("id"));
       Tamagotchi tamagotchi = Tamagotchi.find(id);
+      model.put("user", user);
       model.put("tamagotchi", tamagotchi);
       model.put("user", user);
       model.put("template", "templates/playtamagotchi.vtl");
@@ -418,6 +423,7 @@ public class App {
       User user = request.session().attribute("user");
       int id = Integer.parseInt(request.params("id"));
       Tamagotchi tamagotchi = Tamagotchi.find(id);
+      model.put("user", user);
       model.put("tamagotchi", tamagotchi);
       model.put("user", user);
       model.put("template", "templates/sleeptamagotchi.vtl");
@@ -436,17 +442,26 @@ public class App {
     post("/memory", (request, response) -> {
       Card.delete();
       Card.fillDatabase();
-      List<Card> cards = Card.makeListOfCards(Integer.parseInt(request.queryParams("cardNumber")));
-      int memoryScore = Integer.parseInt(request.queryParams("cardNumber"))*10;
+      List<Card> cards = Card.all();
+      ArrayList<Card> cardDeck = new ArrayList<Card>();
+      int numberOfCards = Integer.parseInt(request.queryParams("cardNumber"));
+      while (cardDeck.size() < numberOfCards) {
+        int number = Card.randomEvenNumber();
+        if (!cardDeck.contains(cards.get(number))) {
+          cardDeck.add(cards.get(number));
+          cardDeck.add(cards.get(number + 1));
+        }
+      }
+      int memoryScore = numberOfCards*10;
       request.session().attribute("memoryScore", memoryScore);
       request.session().attribute("cardNumber", request.queryParams("cardNumber"));
-      Collections.shuffle(cards);
+      Collections.shuffle(cardDeck);
       int counter = 0;
-      for(Card card : cards) {
+      for(Card card : cardDeck) {
         card.assignOrderId(counter);
         counter += 1;
       }
-      request.session().attribute("cards", cards);
+      request.session().attribute("cards", cardDeck);
       response.redirect("/memoryBoard");
       return null;
     });
@@ -469,7 +484,6 @@ public class App {
       List<Card> cards = request.session().attribute("cards");
       model.put("user", user);
       model.put("cards", cards);
-      // model.put("users", User.getSimonHighScores());
       model.put("template", "templates/memoryBoard.vtl");
       return new ModelAndView (model, layout);
     }, new VelocityTemplateEngine());
@@ -532,7 +546,6 @@ public class App {
       model.put("score", score);
       model.put("user", user);
       model.put("cards", cards);
-      // model.put("users", User.getSimonHighScores());
       model.put("template", "templates/showCards.vtl");
       return new ModelAndView (model, layout);
     }, new VelocityTemplateEngine());
@@ -559,7 +572,6 @@ public class App {
       model.put("score", score);
       model.put("user", user);
       model.put("users", User.getMemoryHighScores());
-      // model.put("users", User.getSimonHighScores());
       model.put("template", "templates/memoryGameOver.vtl");
       return new ModelAndView (model, layout);
     }, new VelocityTemplateEngine());

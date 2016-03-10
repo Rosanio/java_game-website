@@ -150,7 +150,6 @@ public class Tamagotchi {
     }
   }
 //update
-
   public void updateAge(){
     this.age+=1;
     if ((this.hunger_level-1) < 0){
@@ -238,7 +237,6 @@ public class Tamagotchi {
       .executeUpdate();
     }
   }
-
   //delete
   public static void delete() {
     try(Connection con = DB.sql2o.open()) {

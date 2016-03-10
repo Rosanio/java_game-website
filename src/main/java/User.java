@@ -174,7 +174,7 @@ public class User {
 
   public static List<User> getMemoryHighScores() {
     try(Connection con = DB.sql2o.open()) {
-      String sql = "SELECT * FROM users ORDER BY memory_high_score ASC LIMIT 10" ;
+      String sql = "SELECT * FROM users ORDER BY memory_high_score DESC LIMIT 10" ;
       return con.createQuery(sql).executeAndFetch(User.class);
     }
   }

@@ -37,7 +37,7 @@ public class Card {
 
   public static List<Card> all() {
     try(Connection con = DB.sql2o.open()) {
-      String sql = "SELECT * FROM cards";
+      String sql = "SELECT * FROM cards order by id";
       return con.createQuery(sql).executeAndFetch(Card.class);
     }
   }
@@ -121,5 +121,14 @@ public class Card {
 
   public void matched() {
     this.match = true;
+  }
+
+  public static int randomEvenNumber() {
+    Random randomCard = new Random();
+    int number = randomCard.nextInt(51);
+    while (number % 2 != 0) {
+      number = randomCard.nextInt(51);
+    }
+    return number;
   }
 }
