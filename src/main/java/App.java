@@ -9,30 +9,34 @@ import org.sql2o.*;
 import static spark.Spark.*;
 
 public class App {
+  public static Integer globalUserId;
   public static void main(String[] args) {
-
-
-      // TimerTask task = new TimerTask(){
-      // @Override
-      //   public void run(){
-      //     Tamagotchi newTama = Tamagotchi.find(8);
-      //     newTama.updateAge();
-      //     newTama.isAlive();
-      //     System.out.println(newTama.getAge());
-      //     System.out.println(newTama.isAlive());
-      //
-      //   }
-      // };
-      //
-      // Timer timer = new Timer();
-      // long delay = 0;
-      // long intervalPeriod = 3000;
-      //
-      // timer.scheduleAtFixedRate(task, delay, intervalPeriod);
-
-
     staticFileLocation("/public");
     String layout = "templates/layout.vtl";
+
+      TimerTask task = new TimerTask(){
+        public void run(){
+          System.out.println(globalUserId);
+          if (globalUserId != null){
+            Tamagotchi newTama = Tamagotchi.find(User.find(globalUserId).getTamagotchiId());
+            System.out.println(newTama.getName());
+            newTama.updateAge();
+            newTama.isAlive();
+            System.out.println(newTama.getAge());
+            System.out.println(newTama.isAlive());
+
+            }
+          // newTama.updateAge();
+          // newTama.isAlive();
+          // System.out.println(newTama.getId());
+          // System.out.println(newTama.getAge());
+          // System.out.println(newTama.isAlive());
+        }
+      };
+      Timer timer = new Timer();
+      long delay = 0;
+      long intervalPeriod = 1000;
+      timer.scheduleAtFixedRate(task, delay, intervalPeriod);
 //user info & game page
     get("/", (request, response) -> {
       HashMap<String, Object> model = new HashMap<String, Object>();
@@ -48,7 +52,7 @@ public class App {
       model.put("incorrectUsername", incorrectUsername);
       model.put("incorrectPassword", incorrectPassword);
       model.put("user", user);
-      model.put("template", "templates/index.vtl");
+      model.put("templateg", "templates/index.vtl");
       return new ModelAndView (model, layout);
     }, new VelocityTemplateEngine());
 
@@ -62,7 +66,9 @@ public class App {
       String inputPassword = request.queryParams("password");
       String inputName = request.queryParams("name");
       User user = User.findByName(inputName);
+
       if(user != null) {
+        globalUserId = user.getId();
         if(user.getPassword().equals(inputPassword)) {
           request.session().attribute("incorrectPassword", false);
           request.session().attribute("incorrectUsername", false);
@@ -336,15 +342,20 @@ public class App {
 
     get("/newtamagotchi", (request, response) -> {
       HashMap<String, Object> model = new HashMap<String, Object>();
+      User user = request.session().attribute("user");
+      model.put("user", user);
       model.put("template", "templates/newtamagotchi.vtl");
       return new ModelAndView (model, layout);
     }, new VelocityTemplateEngine());
 
     post("/newtamagotchi", (request, response) -> {
       HashMap<String, Object> model = new HashMap<String, Object>();
+      User user = request.session().attribute("user");
       String name = request.queryParams("name");
       Tamagotchi tamagotchi = new Tamagotchi(name);
       tamagotchi.save();
+      user.updateTamagotchi(tamagotchi.getId());
+      model.put("user", user);
       model.put("tamagotchi", tamagotchi);
       model.put("template", "templates/newtamagotchi.vtl");
       return new ModelAndView (model, layout);
@@ -404,34 +415,34 @@ public class App {
     }, new VelocityTemplateEngine());
 
 
-    get("/memory", (request, response) -> {
-      HashMap<String, Object> model = new HashMap<String, Object>();
-      User user = request.session().attribute("user");
-      model.put("user", user);
-      // model.put("users", User.getSimonHighScores());
-      model.put("template", "templates/memory.vtl");
-      return new ModelAndView (model, layout);
-    }, new VelocityTemplateEngine());
-
-    post("/memoryBoard", (request, response) -> {
-      Card.delete();
-      Card.fillDatabase();
-      List<Card> cards = Card.makeListOfCards(16).shuffle();
-      request.session().attribute("cards", cards);
-      response.redirect("/memoryBoard");
-      return null;
-    });
-
-    get("/memoryBoard", (request, response) -> {
-      HashMap<String, Object> model = new HashMap<String, Object>();
-      User user = request.session().attribute("user");
-      List<Card> cards = request.session().attribute("cards");
-      model.put("user", user);
-      model.put("cards", cards);
-      // model.put("users", User.getSimonHighScores());
-      model.put("template", "templates/memoryBoard.vtl");
-      return new ModelAndView (model, layout);
-    }, new VelocityTemplateEngine());
+    // get("/memory", (request, response) -> {
+    //   HashMap<String, Object> model = new HashMap<String, Object>();
+    //   User user = request.session().attribute("user");
+    //   model.put("user", user);
+    //   // model.put("users", User.getSimonHighScores());
+    //   model.put("template", "templates/memory.vtl");
+    //   return new ModelAndView (model, layout);
+    // }, new VelocityTemplateEngine());
+    //
+    // post("/memoryBoard", (request, response) -> {
+    //   Card.delete();
+    //   Card.fillDatabase();
+    //   // List<Card> cards = Card.makeListOfCards(16).shuffle();
+    //   request.session().attribute("cards", cards);
+    //   response.redirect("/memoryBoard");
+    //   return null;
+    // });
+    //
+    // get("/memoryBoard", (request, response) -> {
+    //   HashMap<String, Object> model = new HashMap<String, Object>();
+    //   User user = request.session().attribute("user");
+    //   List<Card> cards = request.session().attribute("cards");
+    //   model.put("user", user);
+    //   model.put("cards", cards);
+    //   // model.put("users", User.getSimonHighScores());
+    //   model.put("template", "templates/memoryBoard.vtl");
+    //   return new ModelAndView (model, layout);
+    // }, new VelocityTemplateEngine());
 
   } //end of main
 } //end of app

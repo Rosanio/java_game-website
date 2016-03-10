@@ -9,6 +9,7 @@ public class User {
   private String passwordHint;
   private String profilepic;
   private int simon_high_score;
+  private int tamagotchi_id;
 
   public User(String name, String password, String permissions) {
     this.name = name;
@@ -19,6 +20,10 @@ public class User {
 
   public int getId() {
     return id;
+  }
+
+  public int getTamagotchiId() {
+    return tamagotchi_id;
   }
 
   public String getName() {
@@ -118,6 +123,14 @@ public class User {
     try(Connection con = DB.sql2o.open()) {
       String sql = "UPDATE users SET simon_high_score = :simon_high_score WHERE id = :id" ;
       con.createQuery(sql).addParameter("id", id).addParameter("simon_high_score", simon_high_score).executeUpdate();
+    }
+  }
+
+  public void updateTamagotchi(int tamagotchiId) {
+    this.tamagotchi_id = tamagotchiId;
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "UPDATE users SET tamagotchi_id = :tamagotchi_id WHERE id = :id" ;
+      con.createQuery(sql).addParameter("id", id).addParameter("tamagotchi_id", tamagotchiId).executeUpdate();
     }
   }
 

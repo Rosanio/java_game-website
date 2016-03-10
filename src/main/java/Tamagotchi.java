@@ -19,6 +19,7 @@ public class Tamagotchi {
   private String sleepStatus;
   private String hungerStatus;
   private String happyStatus;
+  private long birthday;
 //getters & constructor
   public Tamagotchi(String tamagotchiName){
     Random randomNumberGenerator = new Random();
@@ -34,6 +35,7 @@ public class Tamagotchi {
     hunger_level = 4;
     happy_level = 8;
     alive = true;
+    // this.birthday = System.getCurrentTimeMillis();
   }
 
   public String getName(){
@@ -96,36 +98,23 @@ public class Tamagotchi {
     }
     return happyStatus;
   }
+
+  public long getBirthday() {
+    return birthday;
+  }
 //life/age status
   public boolean isAlive(){
-    if (hunger_level > 0){
-      alive = true;
-    } else {
+    if (hunger_level == 0 || age >= 90){
       try (Connection con = DB.sql2o.open()){
         String sql = "UPDATE tamagotchis SET alive = false";
         con.createQuery(sql)
         .executeUpdate();
       }
-      // alive = false;
-    }
+    } else {
+        alive = true;
+      }
     return alive;
   }
-
-  // Timer timer = new Timer();
-  // timer.scheduleAtFixedRate(
-  //   new TimerTask()
-  //   {
-  //     public void run(){
-  //       this.age+=3;
-  //       try(Connection con = DB.sql2o.open()){
-  //         String sql = "UPDATE tamagotchis SET (age) = (:age)";
-  //         con.createQuery(sql)
-  //         .addParameter("age", this.age);
-  //         .executeUpdate();
-  //       }
-  //     }
-  //   }, 0, 3000);
-
 
 //create
   @Override
@@ -140,7 +129,7 @@ public class Tamagotchi {
 
   public void save(){
     try(Connection con = DB.sql2o.open()){
-      String sql = "INSERT INTO tamagotchis (name, age, gender, sleep_level, hunger_level, happy_level, alive) VALUES (:name, :age, :gender, :sleep_level, :hunger_level, :happy_level, true)";
+      String sql = "INSERT INTO tamagotchis (name, age, gender, sleep_level, hunger_level, happy_level, alive, birthday) VALUES (:name, :age, :gender, :sleep_level, :hunger_level, :happy_level, true, :birthday)";
       this.id = (int) con.createQuery(sql, true)
       .addParameter("name", name)
       .addParameter("age", age)
@@ -148,6 +137,7 @@ public class Tamagotchi {
       .addParameter("sleep_level", sleep_level)
       .addParameter("hunger_level", hunger_level)
       .addParameter("happy_level", happy_level)
+      .addParameter("birthday", birthday)
       .executeUpdate()
       .getKey();
     }
@@ -169,8 +159,12 @@ public class Tamagotchi {
 //update
 
   public void updateAge(){
-    this.age+=3;
-    this.hunger_level-=3;
+    this.age+=1;
+    if ((this.hunger_level-1) < 0){
+      this.hunger_level = 0;
+    } else {
+      this.hunger_level-=1;
+    }
     try(Connection con = DB.sql2o.open()){
       String sql = "UPDATE tamagotchis SET (age, hunger_level) = (:age, :hunger_level)";
       con.createQuery(sql)
