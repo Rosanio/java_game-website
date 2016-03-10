@@ -16,7 +16,6 @@ public class App {
 
       TimerTask task = new TimerTask(){
         public void run(){
-          System.out.println(globalUserId);
           if (globalUserId != null){
             Tamagotchi newTama = Tamagotchi.find(User.find(globalUserId).getTamagotchiId());
             if (newTama != null){
@@ -45,7 +44,7 @@ public class App {
       model.put("incorrectUsername", incorrectUsername);
       model.put("incorrectPassword", incorrectPassword);
       model.put("user", user);
-      model.put("templateg", "templates/index.vtl");
+      model.put("template", "templates/index.vtl");
       return new ModelAndView (model, layout);
     }, new VelocityTemplateEngine());
 
@@ -61,11 +60,11 @@ public class App {
       User user = User.findByName(inputName);
 
       if(user != null) {
-        globalUserId = user.getId();
         if(user.getPassword().equals(inputPassword)) {
           request.session().attribute("incorrectPassword", false);
           request.session().attribute("incorrectUsername", false);
           request.session().attribute("user", user);
+          globalUserId = user.getId();
           response.redirect("/games");
           return null;
         } else {
@@ -101,6 +100,8 @@ public class App {
     get("/games", (request, response) -> {
       HashMap<String, Object> model = new HashMap<String, Object>();
       User user = request.session().attribute("user");
+      System.out.println(globalUserId);
+      System.out.println(User.find(globalUserId).getTamagotchiId());
       model.put("user", user);
       model.put("template", "templates/games.vtl");
       return new ModelAndView (model, layout);
@@ -329,8 +330,12 @@ public class App {
 //tamagotchi
     get("/tamagotchi", (request, response) -> {
       HashMap<String, Object> model = new HashMap<String, Object>();
-      Tamagotchi.delete();
-      User.clearTamagotchi();
+      User user = request.session().attribute("user");
+      if (User.find(globalUserId).getTamagotchiId() != 0){
+        response.redirect("/newtamagotchi");
+        return null;
+      }
+      model.put("user", user);
       model.put("template", "templates/tamagotchi.vtl");
       return new ModelAndView (model, layout);
     }, new VelocityTemplateEngine());
@@ -338,6 +343,8 @@ public class App {
     get("/newtamagotchi", (request, response) -> {
       HashMap<String, Object> model = new HashMap<String, Object>();
       User user = request.session().attribute("user");
+      Tamagotchi tamagotchi = Tamagotchi.find(User.find(globalUserId).getTamagotchiId());
+      model.put("tamagotchi", tamagotchi);
       model.put("user", user);
       model.put("template", "templates/newtamagotchi.vtl");
       return new ModelAndView (model, layout);
@@ -358,9 +365,13 @@ public class App {
 
     post("/tamagotchiupdate/:id", (request, response) -> {
       HashMap<String, Object> model = new HashMap<String, Object>();
+      User user = request.session().attribute("user");
       int id = Integer.parseInt(request.params("id"));
       Tamagotchi tamagotchi = Tamagotchi.find(id);
       String action = request.queryParams("action");
+      if (!tamagotchi.isAlive()){
+        User.find(globalUserId).clearTamagotchi();
+      }
       if (action.equals("feed")){
         tamagotchi.updateOnFeed();
         response.redirect("/feedtamagotchi/" + tamagotchi.getId());
@@ -375,33 +386,40 @@ public class App {
         return null;
       }
       model.put("tamagotchi", tamagotchi);
+      model.put("user", user);
       model.put("template", "templates/newtamagotchi.vtl");
       return new ModelAndView (model, layout);
     }, new VelocityTemplateEngine());
 
     get("/feedtamagotchi/:id", (request, response) -> {
       HashMap<String, Object> model = new HashMap<String, Object>();
+      User user = request.session().attribute("user");
       int id = Integer.parseInt(request.params("id"));
       Tamagotchi tamagotchi = Tamagotchi.find(id);
       model.put("tamagotchi", tamagotchi);
+      model.put("user", user);
       model.put("template", "templates/feedtamagotchi.vtl");
       return new ModelAndView (model, layout);
     }, new VelocityTemplateEngine());
 
     get("/playtamagotchi/:id", (request, response) -> {
       HashMap<String, Object> model = new HashMap<String, Object>();
+      User user = request.session().attribute("user");
       int id = Integer.parseInt(request.params("id"));
       Tamagotchi tamagotchi = Tamagotchi.find(id);
       model.put("tamagotchi", tamagotchi);
+      model.put("user", user);
       model.put("template", "templates/playtamagotchi.vtl");
       return new ModelAndView (model, layout);
     }, new VelocityTemplateEngine());
 
     get("/sleeptamagotchi/:id", (request, response) -> {
       HashMap<String, Object> model = new HashMap<String, Object>();
+      User user = request.session().attribute("user");
       int id = Integer.parseInt(request.params("id"));
       Tamagotchi tamagotchi = Tamagotchi.find(id);
       model.put("tamagotchi", tamagotchi);
+      model.put("user", user);
       model.put("template", "templates/sleeptamagotchi.vtl");
       return new ModelAndView (model, layout);
     }, new VelocityTemplateEngine());

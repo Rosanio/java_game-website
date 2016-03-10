@@ -9,7 +9,7 @@ public class User {
   private String passwordHint;
   private String profilepic;
   private int simon_high_score;
-  private static int tamagotchi_id;
+  private int tamagotchi_id;
   private int memory_high_score;
   private int points;
 
@@ -102,7 +102,7 @@ public class User {
 //REVISIT THIS TOMORROW***********
   public static void clearTamagotchi() {
     try(Connection con = DB.sql2o.open()) {
-      String sql = "UPDATE users SET tamagotchi_id = null";
+      String sql = "UPDATE users SET tamagotchi_id = 0";
       con.createQuery(sql).executeUpdate();
     }
   }
