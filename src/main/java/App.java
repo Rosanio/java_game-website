@@ -437,17 +437,26 @@ public class App {
     post("/memory", (request, response) -> {
       Card.delete();
       Card.fillDatabase();
-      List<Card> cards = Card.makeListOfCards(Integer.parseInt(request.queryParams("cardNumber")));
-      int memoryScore = Integer.parseInt(request.queryParams("cardNumber"))*10;
+      List<Card> cards = Card.all();
+      ArrayList<Card> cardDeck = new ArrayList<Card>();
+      int numberOfCards = Integer.parseInt(request.queryParams("cardNumber"));
+      while (cardDeck.size() < numberOfCards) {
+        int number = Card.randomEvenNumber();
+        if (!cardDeck.contains(cards.get(number))) {
+          cardDeck.add(cards.get(number));
+          cardDeck.add(cards.get(number + 1));
+        }
+      }
+      int memoryScore = numberOfCards*10;
       request.session().attribute("memoryScore", memoryScore);
       request.session().attribute("cardNumber", request.queryParams("cardNumber"));
-      Collections.shuffle(cards);
+      Collections.shuffle(cardDeck);
       int counter = 0;
-      for(Card card : cards) {
+      for(Card card : cardDeck) {
         card.assignOrderId(counter);
         counter += 1;
       }
-      request.session().attribute("cards", cards);
+      request.session().attribute("cards", cardDeck);
       response.redirect("/memoryBoard");
       return null;
     });
