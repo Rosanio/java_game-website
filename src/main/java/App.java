@@ -433,6 +433,7 @@ public class App {
     get("/memory", (request, response) -> {
       HashMap<String, Object> model = new HashMap<String, Object>();
       User user = request.session().attribute("user");
+      request.session().attribute("player2", null);
       model.put("user", user);
       model.put("users", User.getMemoryHighScores());
       model.put("template", "templates/memory.vtl");
@@ -444,7 +445,13 @@ public class App {
       Card.fillDatabase();
       List<Card> cards = Card.all();
       ArrayList<Card> cardDeck = new ArrayList<Card>();
-      int numberOfCards = Integer.parseInt(request.queryParams("cardNumber"));
+      int numberOfCards = 0;
+      if(request.session().attribute("player2") != null) {
+        numberOfCards = request.session().attribute("numberOfCards");
+      } else {
+        numberOfCards = Integer.parseInt(request.queryParams("cardNumber"));
+        request.session().attribute("numberOfCards", numberOfCards);
+      }
       while (cardDeck.size() < numberOfCards) {
         int number = Card.randomEvenNumber();
         if (!cardDeck.contains(cards.get(number))) {
@@ -462,6 +469,19 @@ public class App {
         counter += 1;
       }
       request.session().attribute("cards", cardDeck);
+      if(request.session().attribute("player2") != null) {
+        int player1score = request.session().attribute("player1score");
+        int player2score = request.session().attribute("player2score");
+        if(player1score > player2score) {
+          request.session().attribute("turn", 2);
+        } else {
+          request.session().attribute("turn", 1);
+        }
+        request.session().attribute("player1score", 0);
+        request.session().attribute("player2score", 0);
+        response.redirect("/memoryBoard");
+        return null;
+      }
       String players = request.queryParams("players");
       if(players.equals("1")) {
         response.redirect("/memoryBoard");
@@ -645,21 +665,49 @@ public class App {
       HashMap<String, Object> model = new HashMap<String, Object>();
       User user = request.session().attribute("user");
       User player2 = request.session().attribute("player2");
-      int score = request.session().attribute("memoryScore");
-      int cardNumber = Integer.parseInt(request.session().attribute("cardNumber"));
-      score += cardNumber*10;
-      if (score > user.getMemoryHighScore()) {
-        user.updateMemoryScore(score);
-        String congrats = "Congratulations you set a new record!";
-        model.put("congrats", congrats);
+      if(player2 != null) {
+        int player1score = request.session().attribute("player1score");
+        int player2score = request.session().attribute("player2score");
+        if(player1score > player2score) {
+          int p1wins = user.getMemoryWins();
+          p1wins += 1;
+          user.updateMemoryWins(p1wins);
+          int p2losses = player2.getMemoryLosses();
+          p2losses += 1;
+          player2.updateMemoryLosses(p2losses);
+        } else if (player1score < player2score) {
+          int p1losses = user.getMemoryLosses();
+          p1losses += 1;
+          user.updateMemoryLosses(p1losses);
+          int p2wins = player2.getMemoryWins();
+          p2wins += 1;
+          player2.updateMemoryWins(p2wins);
+        } else {
+          int p1wins = user.getMemoryWins();
+          p1wins += 1;
+          user.updateMemoryWins(p1wins);
+          int p2wins = player2.getMemoryWins();
+          p2wins += 1;
+          player2.updateMemoryWins(p2wins);
+        }
+        model.put("player2", player2);
+        model.put("player1score", player1score);
+        model.put("player2score", player2score);
+      } else {
+        int cardNumber = Integer.parseInt(request.session().attribute("cardNumber"));
+        int score = request.session().attribute("memoryScore");
+        score += cardNumber*10;
+        if (score > user.getMemoryHighScore()) {
+          user.updateMemoryScore(score);
+          String congrats = "Congratulations you set a new record!";
+          model.put("congrats", congrats);
+        }
+        request.session().attribute("memoryScore", score);
+        model.put("score", score);
+        model.put("users", User.getMemoryHighScores());
+
       }
-      request.session().attribute("memoryScore", score);
-      model.put("score", score);
       model.put("user", user);
-      model.put("player2", player2);
-      model.put("player1score", request.session().attribute("player1score"));
-      model.put("player2score", request.session().attribute("player2score"));
-      model.put("users", User.getMemoryHighScores());
       model.put("template", "templates/memoryGameOver.vtl");
       return new ModelAndView (model, layout);
     }, new VelocityTemplateEngine());

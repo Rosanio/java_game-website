@@ -12,6 +12,8 @@ public class User {
   private int tamagotchi_id;
   private int memory_high_score;
   private int points;
+  private int memory_wins;
+  private int memory_losses;
 
   public User(String name, String password, String permissions) {
     this.name = name;
@@ -19,6 +21,9 @@ public class User {
     this.permissions = permissions;
     this.simon_high_score = 0;
     this.memory_high_score = 0;
+    this.points = 0;
+    this.memory_wins = 0;
+    this.memory_losses = 0;
   }
 
   public int getId() {
@@ -56,6 +61,15 @@ public class User {
   public int getMemoryHighScore() {
     return memory_high_score;
   }
+  public int getPoints() {
+    return points;
+  }
+  public int getMemoryWins() {
+    return memory_wins;
+  }
+  public int getMemoryLosses() {
+    return memory_losses;
+  }
 
   public static List<User> all() {
     try(Connection con = DB.sql2o.open()) {
@@ -76,7 +90,7 @@ public class User {
 
   public void save() {
     try(Connection con = DB.sql2o.open()) {
-      String sql = "INSERT INTO users (name, password, permissions, simon_high_score, memory_high_score) VALUES (:name, :password, :permissions, 0, 0)";
+      String sql = "INSERT INTO users (name, password, permissions, simon_high_score, memory_high_score, points, memory_wins, memory_losses) VALUES (:name, :password, :permissions, 0, 0, 0, 0, 0)";
       this.id = (int) con.createQuery(sql, true).addParameter("name", name).addParameter("password", password).addParameter("permissions", permissions).executeUpdate().getKey();
     }
   }
@@ -150,7 +164,7 @@ public class User {
   }
 
   public void updateMemoryScore(int memory_high_score) {
-    this.simon_high_score = simon_high_score;
+    this.memory_high_score = memory_high_score;
     try(Connection con = DB.sql2o.open()) {
       String sql = "UPDATE users SET memory_high_score = :memory_high_score WHERE id = :id" ;
       con.createQuery(sql).addParameter("id", id).addParameter("memory_high_score", memory_high_score).executeUpdate();
@@ -179,5 +193,25 @@ public class User {
     }
   }
 
-
+  public void updatePoints(int points) {
+    this.points = points;
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "UPDATE users SET points = :points WHERE id = :id" ;
+      con.createQuery(sql).addParameter("id", id).addParameter("points", points).executeUpdate();
+    }
+  }
+  public void updateMemoryWins(int memory_wins) {
+    this.memory_wins = memory_wins;
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "UPDATE users SET memory_wins = :memory_wins WHERE id = :id" ;
+      con.createQuery(sql).addParameter("id", id).addParameter("memory_wins", memory_wins).executeUpdate();
+    }
+  }
+  public void updateMemoryLosses(int memory_losses) {
+    this.memory_losses = memory_losses;
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "UPDATE users SET memory_losses = :memory_losses WHERE id = :id" ;
+      con.createQuery(sql).addParameter("id", id).addParameter("memory_losses", memory_losses).executeUpdate();
+    }
+  }
 }

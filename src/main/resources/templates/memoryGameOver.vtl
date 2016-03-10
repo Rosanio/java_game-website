@@ -4,11 +4,16 @@
   #elseif ($player2score > $player1score)
 <h2>$player2.getName(), You Did It!!</h2>
   #else
-<h2>You tied!</h2>
+<h2>Everyones a Winner!</h2>
   #end
 <p>$user.getName(): $player1score</p>
 <p>$player2.getName(): $player2score</p>
-
+<p>$user.getName()'s Record: $user.getMemoryWins() - $user.getMemoryLosses()</p>
+<p>$player2.getName()'s Record: $player2.getMemoryWins() - $player2.getMemoryLosses()</p>
+<form action="/memory" method="post">
+  <button type="submit" class="btn btn-danger">Rematch!!</button>
+</form>
+<a href="/memory"><button class="btn btn-info">New Game</button></a>
 #else
 <h2>You Did It!!</h2>
 <div class="row">

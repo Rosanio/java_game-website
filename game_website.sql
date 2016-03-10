@@ -152,7 +152,9 @@ CREATE TABLE users (
     profilepic character varying,
     tamagotchi_id integer,
     memory_high_score integer,
-    points integer
+    points integer,
+    memory_wins integer,
+    memory_losses integer
 );
 
 
@@ -212,58 +214,58 @@ ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regcl
 --
 
 COPY cards (id, symbol, shown, match) FROM stdin;
-1717	⌛️	f	\N
-1719	🌈	f	\N
-1721	🎾	f	\N
-1723	🐤	f	\N
-1725	👍	f	\N
-1727	✊	f	\N
-1729	👻	f	\N
-1731	💚	f	\N
-1733	💰	f	\N
-1735	🚴	f	\N
-1737	🖕	f	\N
-1739	🐼	f	\N
-1741	🦄	f	\N
-1743	🎎	f	\N
-1745	🙌	f	\N
-1747	🐠	f	\N
-1749	🍷	f	\N
-1751	🐈	f	\N
-1753	🐷	f	\N
-1755	😈	f	\N
-1757	👯	f	\N
-1759	💃	f	\N
-1761	🐮	f	\N
-1763	🌟	f	\N
-1765	🍡	f	\N
-1767	🎀	f	\N
-1718	⌛️	f	\N
-1720	🌈	f	\N
-1722	🎾	f	\N
-1724	🐤	f	\N
-1726	👍	f	\N
-1728	✊	f	\N
-1730	👻	f	\N
-1732	💚	f	\N
-1734	💰	f	\N
-1736	🚴	f	\N
-1738	🖕	f	\N
-1740	🐼	f	\N
-1742	🦄	f	\N
-1744	🎎	f	\N
-1746	🙌	f	\N
-1748	🐠	f	\N
-1750	🍷	f	\N
-1752	🐈	f	\N
-1754	🐷	f	\N
-1756	😈	f	\N
-1758	👯	f	\N
-1760	💃	f	\N
-1762	🐮	f	\N
-1764	🌟	f	\N
-1766	🍡	f	\N
-1768	🎀	f	\N
+3173	⌛️	f	\N
+3175	🌈	f	\N
+3177	🎾	f	\N
+3179	🐤	f	\N
+3181	👍	f	\N
+3183	✊	f	\N
+3185	👻	f	\N
+3187	💚	f	\N
+3189	💰	f	\N
+3191	🚴	f	\N
+3193	🖕	f	\N
+3195	🐼	f	\N
+3197	🦄	f	\N
+3199	🎎	f	\N
+3201	🙌	f	\N
+3203	🐠	f	\N
+3205	🍷	f	\N
+3207	🐈	f	\N
+3209	🐷	f	\N
+3211	😈	f	\N
+3213	👯	f	\N
+3215	💃	f	\N
+3217	🐮	f	\N
+3219	🌟	f	\N
+3221	🍡	f	\N
+3223	🎀	f	\N
+3174	⌛️	f	\N
+3176	🌈	f	\N
+3178	🎾	f	\N
+3180	🐤	f	\N
+3182	👍	f	\N
+3184	✊	f	\N
+3186	👻	f	\N
+3188	💚	f	\N
+3190	💰	f	\N
+3192	🚴	f	\N
+3194	🖕	f	\N
+3196	🐼	f	\N
+3198	🦄	f	\N
+3200	🎎	f	\N
+3202	🙌	f	\N
+3204	🐠	f	\N
+3206	🍷	f	\N
+3208	🐈	f	\N
+3210	🐷	f	\N
+3212	😈	f	\N
+3214	👯	f	\N
+3216	💃	f	\N
+3218	🐮	f	\N
+3220	🌟	f	\N
+3222	🍡	f	\N
+3224	🎀	f	\N
 \.
 
 
@@ -271,7 +273,7 @@ COPY cards (id, symbol, shown, match) FROM stdin;
 -- Name: cards_id_seq; Type: SEQUENCE SET; Schema: public; Owner: Guest
 --
 
-SELECT pg_catalog.setval('cards_id_seq', 1768, true);
+SELECT pg_catalog.setval('cards_id_seq', 3224, true);
 
 
 --
@@ -322,11 +324,12 @@ SELECT pg_catalog.setval('turns_id_seq', 325, true);
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: Guest
 --
 
-COPY users (id, name, password, permissions, passwordhint, simon_high_score, profilepic, tamagotchi_id, memory_high_score, points) FROM stdin;
-17	aa	1234	user	\N	0	\N	0	0	\N
-18	anna	123	user	\N	1	\N	0	200	\N
-19	matt	123	user	\N	0	\N	0	0	\N
-16	izzy	12345	user	\N	0	\N	0	0	\N
+COPY users (id, name, password, permissions, passwordhint, simon_high_score, profilepic, tamagotchi_id, memory_high_score, points, memory_wins, memory_losses) FROM stdin;
+17	aa	1234	user	\N	0	\N	0	0	\N	\N	\N
+16	izzy	12345	user	\N	0	\N	0	0	\N	\N	\N
+20	wer	123	user	\N	0	\N	\N	0	\N	\N	\N
+18	anna	123	user	\N	1	\N	0	120	\N	\N	\N
+19	matt	123	user	\N	0	\N	0	80	\N	\N	\N
 \.
 
 
@@ -334,7 +337,7 @@ COPY users (id, name, password, permissions, passwordhint, simon_high_score, pro
 -- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: Guest
 --
 
-SELECT pg_catalog.setval('users_id_seq', 19, true);
+SELECT pg_catalog.setval('users_id_seq', 20, true);
 
 
 --
