@@ -1,0 +1,21 @@
+<h2>You Did It!!</h2>
+<div class="row">
+  <div class="col-md-6">
+    <h4>Your Final Score:</h4>
+    <p>$score</p>
+    <!-- #if ($congrats)
+    $congrats
+    #end
+    <h4>High Score:</h4>
+    <p>$highScore</p> -->
+    <a href="/memory"><button class="btn btn-danger">Play Again</button></a>
+  </div>
+  <div class="col-md-6">
+    <h3 class="gameHeaderText">Current High Scores:</h3>
+    <ul>
+    #foreach($useer in $users)
+      <li>$useer.getName(): $useer.getMemoryHighScore()</li>
+    #end
+    </ul>
+  </div>
+</div>

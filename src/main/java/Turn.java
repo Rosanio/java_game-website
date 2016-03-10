@@ -115,7 +115,7 @@ public class Turn {
 
   public static Turn getNextUnshownTurn() {
     try(Connection con = DB.sql2o.open()) {
-      String sql = "SELECT * FROM turns WHERE shown = false";
+      String sql = "SELECT * FROM turns WHERE shown = false ORDER BY id";
       return con.createQuery(sql).executeAndFetchFirst(Turn.class);
     }
   }
