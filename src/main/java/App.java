@@ -154,7 +154,7 @@ public class App {
       Turn.deleteUserGuess();
       Double difficulty = Double.parseDouble(request.queryParams("difficulty")) * -1.0;
       request.session().attribute("time", difficulty);
-      Double diffMultiplierDouble = 1.0 / difficulty;
+      Double diffMultiplierDouble = (1.1 + difficulty) / ((1.1 * difficulty + 0.349) * (1.1 * difficulty + 0.349));
       Integer diffMultiplier = diffMultiplierDouble.intValue();
       request.session().attribute("diffMultiplier", diffMultiplier);
       Turn newTurn = new Turn();
