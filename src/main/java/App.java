@@ -368,6 +368,7 @@ public class App {
       Tamagotchi tamagotchi = Tamagotchi.find(User.find(globalUserId).getTamagotchiId());
       if (!tamagotchi.isAlive()){
         User.find(globalUserId).clearTamagotchi();
+        tamagotchi.delete();
       }
       model.put("tamagotchi", tamagotchi);
       model.put("user", user);
