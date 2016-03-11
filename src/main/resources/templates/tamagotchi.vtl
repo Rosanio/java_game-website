@@ -2,6 +2,8 @@
   <h1>Tamagotchi Simulator</h1><hr>
     <p>Tamagotchis age by the minute (1 minute = 1 day) and have a lifespan of 90 minutes. Keep your pet lively by feeding and playing with it. Make sure to check back as its hunger will decrease over time!</p>
     <form action="/newtamagotchi" method="post">
+      <label for="gameSpeed">Game speed: </label>
+      <input type="range" name="gameSpeed" min="1" max="3" step="1">
       <label for="name"><h4>Name your new pet, and remember to take good care of it!</h4></label>
       <br>
       <input id="name" name="name" type="text">

@@ -10,6 +10,7 @@ import static spark.Spark.*;
 
 public class App {
   public static Integer globalUserId;
+  public static long intervalPeriod = 1000;
   public static void main(String[] args) {
     staticFileLocation("/public");
     String layout = "templates/layout.vtl";
@@ -18,7 +19,9 @@ public class App {
         public void run(){
           if (globalUserId != null){
             Tamagotchi newTama = Tamagotchi.find(User.find(globalUserId).getTamagotchiId());
-            if (newTama != null){
+            if (newTama != null && newTama.isAlive()){
+              System.out.println((Tamagotchi.find(User.find(globalUserId).getTamagotchiId())).getAge());
+              System.out.println((Tamagotchi.find(User.find(globalUserId).getTamagotchiId())).isAlive());
               newTama.updateAge();
               newTama.isAlive();
             }
@@ -27,12 +30,10 @@ public class App {
       };
       Timer timer = new Timer();
       long delay = 0;
-      long intervalPeriod = 60000;
       timer.scheduleAtFixedRate(task, delay, intervalPeriod);
 //user info & game page
     get("/", (request, response) -> {
       HashMap<String, Object> model = new HashMap<String, Object>();
-      globalUserId = 0;
       request.session().attribute("user", null);
       model.put("template", "templates/index.vtl");
       return new ModelAndView (model, layout);
@@ -156,7 +157,7 @@ public class App {
       request.session().attribute("diffMultiplier", diffMultiplier);
       Turn newTurn = new Turn();
       newTurn.save();
-      response.redirect("/3");
+      response.redirect("/5");
       return null;
       });
 
@@ -173,25 +174,43 @@ public class App {
       newTurn.save();
       response.redirect("/replay");
       return null;
-      });
+    });
 
-      get("/3", (request, response) -> {
-        HashMap<String, Object> model = new HashMap<String, Object>();
-        model.put("template", "templates/3.vtl");
-        return new ModelAndView (model, layout);
-      }, new VelocityTemplateEngine());
+    get("/5", (request, response) -> {
+      HashMap<String, Object> model = new HashMap<String, Object>();
+      model.put("template", "templates/5.vtl");
+      return new ModelAndView (model, layout);
+    }, new VelocityTemplateEngine());
 
-      get("/2", (request, response) -> {
-        HashMap<String, Object> model = new HashMap<String, Object>();
-        model.put("template", "templates/2.vtl");
-        return new ModelAndView (model, layout);
-      }, new VelocityTemplateEngine());
+    get("/4", (request, response) -> {
+      HashMap<String, Object> model = new HashMap<String, Object>();
+      model.put("template", "templates/4.vtl");
+      return new ModelAndView (model, layout);
+    }, new VelocityTemplateEngine());
 
-      get("/1", (request, response) -> {
-        HashMap<String, Object> model = new HashMap<String, Object>();
-        model.put("template", "templates/1.vtl");
-        return new ModelAndView (model, layout);
-      }, new VelocityTemplateEngine());
+    get("/3", (request, response) -> {
+      HashMap<String, Object> model = new HashMap<String, Object>();
+      model.put("template", "templates/3.vtl");
+      return new ModelAndView (model, layout);
+    }, new VelocityTemplateEngine());
+
+    get("/2", (request, response) -> {
+      HashMap<String, Object> model = new HashMap<String, Object>();
+      model.put("template", "templates/2.vtl");
+      return new ModelAndView (model, layout);
+    }, new VelocityTemplateEngine());
+
+    get("/1", (request, response) -> {
+      HashMap<String, Object> model = new HashMap<String, Object>();
+      model.put("template", "templates/1.vtl");
+      return new ModelAndView (model, layout);
+    }, new VelocityTemplateEngine());
+
+    get("/go", (request, response) -> {
+      HashMap<String, Object> model = new HashMap<String, Object>();
+      model.put("template", "templates/go.vtl");
+      return new ModelAndView (model, layout);
+    }, new VelocityTemplateEngine());
 
     get("/replay", (request, response) -> {
       if (Turn.allShown() == false) {
@@ -347,6 +366,9 @@ public class App {
       HashMap<String, Object> model = new HashMap<String, Object>();
       User user = request.session().attribute("user");
       Tamagotchi tamagotchi = Tamagotchi.find(User.find(globalUserId).getTamagotchiId());
+      if (!tamagotchi.isAlive()){
+        User.find(globalUserId).clearTamagotchi();
+      }
       model.put("tamagotchi", tamagotchi);
       model.put("user", user);
       model.put("template", "templates/newtamagotchi.vtl");
@@ -357,6 +379,14 @@ public class App {
       HashMap<String, Object> model = new HashMap<String, Object>();
       User user = request.session().attribute("user");
       String name = request.queryParams("name");
+      int gameSpeed = Integer.parseInt(request.queryParams("gameSpeed"));
+      if (gameSpeed == 1){
+        intervalPeriod = 1000;
+      } else if (gameSpeed == 2){
+        intervalPeriod = 60000;
+      } else {
+        intervalPeriod = 100000;
+      }
       Tamagotchi tamagotchi = new Tamagotchi(name);
       tamagotchi.save();
       user.updateTamagotchi(tamagotchi.getId());
@@ -372,8 +402,9 @@ public class App {
       int id = Integer.parseInt(request.params("id"));
       Tamagotchi tamagotchi = Tamagotchi.find(id);
       String action = request.queryParams("action");
-      if (!tamagotchi.isAlive()){
-        User.find(globalUserId).clearTamagotchi();
+      if(!tamagotchi.isAlive()){
+        response.redirect("/newtamagotchi");
+        return null;
       }
       if (action.equals("feed")){
         tamagotchi.updateOnFeed();
@@ -468,6 +499,7 @@ public class App {
         card.assignOrderId(counter);
         counter += 1;
       }
+      // String players = request.queryParams("players");
       request.session().attribute("cards", cardDeck);
       if(request.session().attribute("player2") != null) {
         int player1score = request.session().attribute("player1score");

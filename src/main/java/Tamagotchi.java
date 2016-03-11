@@ -98,7 +98,7 @@ public class Tamagotchi {
   }
 //life/age status
   public boolean isAlive(){
-    if (hunger_level == 0 || age >= 90){
+    if (hunger_level == 0 || age >= 90 || this.id == 0){
       try (Connection con = DB.sql2o.open()){
         String sql = "UPDATE tamagotchis SET alive = false";
         con.createQuery(sql)
