@@ -154,7 +154,8 @@ CREATE TABLE users (
     memory_high_score integer,
     points integer,
     memory_wins integer,
-    memory_losses integer
+    memory_losses integer,
+    tamagotchi_food integer
 );
 
 
@@ -214,58 +215,58 @@ ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regcl
 --
 
 COPY cards (id, symbol, shown, match) FROM stdin;
-5877	⌛️	f	\N
-5879	🌈	f	\N
-5881	🎾	f	\N
-5883	🐤	f	\N
-5885	👍	f	\N
-5887	✊	f	\N
-5889	👻	f	\N
-5891	💚	f	\N
-5893	💰	f	\N
-5895	🚴	f	\N
-5897	🖕	f	\N
-5899	🐼	f	\N
-5901	🦄	f	\N
-5903	🎎	f	\N
-5905	🙌	f	\N
-5907	🐠	f	\N
-5909	🍷	f	\N
-5911	🐈	f	\N
-5913	🐷	f	\N
-5915	😈	f	\N
-5917	👯	f	\N
-5919	💃	f	\N
-5921	🐮	f	\N
-5923	🌟	f	\N
-5925	🍡	f	\N
-5927	🎀	f	\N
-5878	⌛️	f	\N
-5880	🌈	f	\N
-5882	🎾	f	\N
-5884	🐤	f	\N
-5886	👍	f	\N
-5888	✊	f	\N
-5890	👻	f	\N
-5892	💚	f	\N
-5894	💰	f	\N
-5896	🚴	f	\N
-5898	🖕	f	\N
-5900	🐼	f	\N
-5902	🦄	f	\N
-5904	🎎	f	\N
-5906	🙌	f	\N
-5908	🐠	f	\N
-5910	🍷	f	\N
-5912	🐈	f	\N
-5914	🐷	f	\N
-5916	😈	f	\N
-5918	👯	f	\N
-5920	💃	f	\N
-5922	🐮	f	\N
-5924	🌟	f	\N
-5926	🍡	f	\N
-5928	🎀	f	\N
+6501	⌛️	f	\N
+6503	🌈	f	\N
+6505	🎾	f	\N
+6507	🐤	f	\N
+6509	👍	f	\N
+6511	✊	f	\N
+6513	👻	f	\N
+6515	💚	f	\N
+6517	💰	f	\N
+6519	🚴	f	\N
+6521	🖕	f	\N
+6523	🐼	f	\N
+6525	🦄	f	\N
+6527	🎎	f	\N
+6529	🙌	f	\N
+6531	🐠	f	\N
+6533	🍷	f	\N
+6535	🐈	f	\N
+6537	🐷	f	\N
+6539	😈	f	\N
+6541	👯	f	\N
+6543	💃	f	\N
+6545	🐮	f	\N
+6547	🌟	f	\N
+6549	🍡	f	\N
+6551	🎀	f	\N
+6502	⌛️	f	\N
+6504	🌈	f	\N
+6506	🎾	f	\N
+6508	🐤	f	\N
+6510	👍	f	\N
+6512	✊	f	\N
+6514	👻	f	\N
+6516	💚	f	\N
+6518	💰	f	\N
+6520	🚴	f	\N
+6522	🖕	f	\N
+6524	🐼	f	\N
+6526	🦄	f	\N
+6528	🎎	f	\N
+6530	🙌	f	\N
+6532	🐠	f	\N
+6534	🍷	f	\N
+6536	🐈	f	\N
+6538	🐷	f	\N
+6540	😈	f	\N
+6542	👯	f	\N
+6544	💃	f	\N
+6546	🐮	f	\N
+6548	🌟	f	\N
+6550	🍡	f	\N
+6552	🎀	f	\N
 \.
 
 
@@ -273,7 +274,7 @@ COPY cards (id, symbol, shown, match) FROM stdin;
 -- Name: cards_id_seq; Type: SEQUENCE SET; Schema: public; Owner: Guest
 --
 
-SELECT pg_catalog.setval('cards_id_seq', 5928, true);
+SELECT pg_catalog.setval('cards_id_seq', 6552, true);
 
 
 --
@@ -288,7 +289,7 @@ COPY tamagotchis (id, name, age, gender, sleep_level, hunger_level, happy_level,
 -- Name: tamagotchis_id_seq; Type: SEQUENCE SET; Schema: public; Owner: Guest
 --
 
-SELECT pg_catalog.setval('tamagotchis_id_seq', 72, true);
+SELECT pg_catalog.setval('tamagotchis_id_seq', 86, true);
 
 
 --
@@ -303,17 +304,17 @@ COPY turns (id, comp_turn, user_turn, shown) FROM stdin;
 -- Name: turns_id_seq; Type: SEQUENCE SET; Schema: public; Owner: Guest
 --
 
-SELECT pg_catalog.setval('turns_id_seq', 328, true);
+SELECT pg_catalog.setval('turns_id_seq', 476, true);
 
 
 --
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: Guest
 --
 
-COPY users (id, name, password, permissions, passwordhint, simon_high_score, profilepic, tamagotchi_id, memory_high_score, points, memory_wins, memory_losses) FROM stdin;
-18	anna	1234	user	\N	1	http://s3.amazonaws.com/rapgenius/cats-animals-kittens-background.jpg	0	120	\N	9	1
-19	matt	123	user	\N	0	https://i.ytimg.com/vi/u5wU0xt3e54/maxresdefault.jpg	72	235	\N	12	5
-16	izzy	12345	user	\N	0	\N	0	0	\N	1	1
+COPY users (id, name, password, permissions, passwordhint, simon_high_score, profilepic, tamagotchi_id, memory_high_score, points, memory_wins, memory_losses, tamagotchi_food) FROM stdin;
+18	anna	1234	admin	\N	1	http://s3.amazonaws.com/rapgenius/cats-animals-kittens-background.jpg	0	120	\N	10	3	\N
+16	izzy	12345	user	\N	330	http://image.syracuse.com/home/syr-media/width620/img/zoo/photo/2015/10/05/18906340-mmmain.jpg	0	0	132	3	1	1
+19	matt	123	user	\N	36	https://i.ytimg.com/vi/u5wU0xt3e54/maxresdefault.jpg	0	625	234	13	5	0
 \.
 
 
@@ -321,7 +322,7 @@ COPY users (id, name, password, permissions, passwordhint, simon_high_score, pro
 -- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: Guest
 --
 
-SELECT pg_catalog.setval('users_id_seq', 21, true);
+SELECT pg_catalog.setval('users_id_seq', 22, true);
 
 
 --
