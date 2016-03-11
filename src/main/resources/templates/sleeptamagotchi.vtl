@@ -1,4 +1,8 @@
 <div class="tamagotchiContainer">
+  #if ($tamagotchi.isAlive())
+    <meta http-equiv="refresh" content="1;url=/newtamagotchi" />
+  #else
+  #end
   <h1>Tamagotchi Simulator</h1><hr>
   <h4>$tamagotchi.getName()</h4>
   <p>Age: $tamagotchi.getAge() days</p>
