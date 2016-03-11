@@ -5,33 +5,43 @@ import java.lang.Thread;
 import java.util.Timer;
 import java.util.TimerTask;
 import org.sql2o.*;
-
 import static spark.Spark.*;
 
 public class App {
   public static Integer globalUserId;
-  public static String website;
-  public static long intervalPeriod = 1000;
-
   public static void main(String[] args) {
     staticFileLocation("/public");
     String layout = "templates/layout.vtl";
-
       TimerTask task = new TimerTask(){
         public void run(){
           if (globalUserId != null){
-            Tamagotchi newTama = Tamagotchi.find(User.find(globalUserId).getTamagotchiId());
+            User userTimer = User.find(globalUserId);
+            Tamagotchi newTama = Tamagotchi.find(userTimer.getTamagotchiId());
             if (newTama != null && newTama.isAlive()){
-              System.out.println((Tamagotchi.find(User.find(globalUserId).getTamagotchiId())).getAge());
-              System.out.println((Tamagotchi.find(User.find(globalUserId).getTamagotchiId())).isAlive());
               newTama.updateAge();
               newTama.isAlive();
+              if (newTama.getAge() == 30){
+                int tamaPoints = userTimer.getPoints();
+                tamaPoints += 200;
+                userTimer.updatePoints(tamaPoints);
+              }
+              if (newTama.getAge() == 60){
+                int tamaPoints = userTimer.getPoints();
+                tamaPoints += 500;
+                userTimer.updatePoints(tamaPoints);
+              }
+              if (newTama.getAge() == 90){
+                int tamaPoints = userTimer.getPoints();
+                tamaPoints += 1000;
+                userTimer.updatePoints(tamaPoints);
+              }
             }
           }
         }
       };
       Timer timer = new Timer();
       long delay = 0;
+      long intervalPeriod = 60000;
       timer.scheduleAtFixedRate(task, delay, intervalPeriod);
 //user info & game page
     get("/", (request, response) -> {
@@ -104,19 +114,19 @@ public class App {
 
     get("/games", (request, response) -> {
       HashMap<String, Object> model = new HashMap<String, Object>();
-      System.out.println(globalUserId);
       User user = request.session().attribute("user");
-      System.out.println(globalUserId);
-      System.out.println(User.find(globalUserId).getTamagotchiId());
       model.put("user", user);
       model.put("template", "templates/games.vtl");
       return new ModelAndView (model, layout);
     }, new VelocityTemplateEngine());
 
+    //profile
+
     get("/profile", (request, response) -> {
       HashMap<String, Object> model = new HashMap<String, Object>();
       User user = request.session().attribute("user");
       model.put("user", user);
+      model.put("points", user.getPoints());
       model.put("template", "templates/profile.vtl");
       return new ModelAndView (model, layout);
     }, new VelocityTemplateEngine());
@@ -136,7 +146,19 @@ public class App {
       response.redirect("/profile");
       return null;
     });
+
+    post("/buyFood", (request, response) -> {
+      User user = request.session().attribute("user");
+      user.updateTamagotchiFood(1);
+      int points = user.getPoints();
+      points -= 300;
+      user.updatePoints(points);
+      response.redirect("/profile");
+      return null;
+    });
+
 //simon says
+
     get("/simonSays", (request, response) -> {
       HashMap<String, Object> model = new HashMap<String, Object>();
       Turn.delete();
@@ -180,36 +202,48 @@ public class App {
 
     get("/5", (request, response) -> {
       HashMap<String, Object> model = new HashMap<String, Object>();
+      User user = request.session().attribute("user");
+      model.put("user", user);
       model.put("template", "templates/5.vtl");
       return new ModelAndView (model, layout);
     }, new VelocityTemplateEngine());
 
     get("/4", (request, response) -> {
       HashMap<String, Object> model = new HashMap<String, Object>();
+      User user = request.session().attribute("user");
+      model.put("user", user);
       model.put("template", "templates/4.vtl");
       return new ModelAndView (model, layout);
     }, new VelocityTemplateEngine());
 
     get("/3", (request, response) -> {
       HashMap<String, Object> model = new HashMap<String, Object>();
+      User user = request.session().attribute("user");
+      model.put("user", user);
       model.put("template", "templates/3.vtl");
       return new ModelAndView (model, layout);
     }, new VelocityTemplateEngine());
 
     get("/2", (request, response) -> {
       HashMap<String, Object> model = new HashMap<String, Object>();
+      User user = request.session().attribute("user");
+      model.put("user", user);
       model.put("template", "templates/2.vtl");
       return new ModelAndView (model, layout);
     }, new VelocityTemplateEngine());
 
     get("/1", (request, response) -> {
       HashMap<String, Object> model = new HashMap<String, Object>();
+      User user = request.session().attribute("user");
+      model.put("user", user);
       model.put("template", "templates/1.vtl");
       return new ModelAndView (model, layout);
     }, new VelocityTemplateEngine());
 
     get("/go", (request, response) -> {
       HashMap<String, Object> model = new HashMap<String, Object>();
+      User user = request.session().attribute("user");
+      model.put("user", user);
       model.put("template", "templates/go.vtl");
       return new ModelAndView (model, layout);
     }, new VelocityTemplateEngine());
@@ -310,7 +344,6 @@ public class App {
       User user = request.session().attribute("user");
 
       Integer currentScore = request.session().attribute("simonScore");
-      System.out.println(currentScore);
       model.put("currentScore", currentScore);
       model.put("user", user);
       model.put("template", "templates/play.vtl");
@@ -337,6 +370,9 @@ public class App {
       HashMap<String, Object> model = new HashMap<String, Object>();
       User user = request.session().attribute("user");
       Integer currentScore = request.session().attribute("simonScore");
+      int points = user.getPoints();
+      points += currentScore;
+      user.updatePoints(points);
       Integer userHighScore = user.getSimonHighScore();
       if (currentScore > userHighScore) {
         user.updateSimonScore(currentScore);
@@ -359,8 +395,6 @@ public class App {
         response.redirect("/newtamagotchi");
         return null;
       }
-      website = "tamagotchi";
-      System.out.println(website);
       model.put("user", user);
       model.put("template", "templates/tamagotchi.vtl");
       return new ModelAndView (model, layout);
@@ -374,6 +408,8 @@ public class App {
         User.find(globalUserId).clearTamagotchi();
         tamagotchi.delete();
       }
+      model.put("remainingFood", user.getTamagotchiFood());
+      model.put("fed", request.session().attribute("wasFed"));
       model.put("tamagotchi", tamagotchi);
       model.put("user", user);
       model.put("template", "templates/newtamagotchi.vtl");
@@ -381,22 +417,23 @@ public class App {
     }, new VelocityTemplateEngine());
 
     post("/newtamagotchi", (request, response) -> {
-      HashMap<String, Object> model = new HashMap<String, Object>();
       User user = request.session().attribute("user");
       String name = request.queryParams("name");
-      int gameSpeed = Integer.parseInt(request.queryParams("gameSpeed"));
-      if (gameSpeed == 1){
-        intervalPeriod = 1000;
-      } else if (gameSpeed == 2){
-        intervalPeriod = 60000;
-      } else {
-        intervalPeriod = 100000;
-      }
       Tamagotchi tamagotchi = new Tamagotchi(name);
       tamagotchi.save();
       user.updateTamagotchi(tamagotchi.getId());
-      model.put("user", user);
-      model.put("tamagotchi", tamagotchi);
+      // if (gameSpeed == 1){
+      //   System.out.println("teststestestset");
+      //   intervalPeriod = 1000;
+      //   task.cancel();
+      //   timer = new Timer();
+      //   timer.scheduleAtFixedRate(task, delay, intervalPeriod);
+      // } else if (gameSpeed == 2){
+      //   intervalPeriod = 30000;
+      // } else {
+      //   intervalPeriod = 60000;
+      // }
+      request.session().attribute("wasFed", true);
       response.redirect("/newtamagotchi");
       return null;
     });
@@ -412,18 +449,27 @@ public class App {
         return null;
       }
       if (action.equals("feed")){
-        tamagotchi.updateOnFeed();
-        response.redirect("/feedtamagotchi/" + tamagotchi.getId());
+        if (user.getTamagotchiFood() > 0){
+          tamagotchi.updateOnFeed();
+          int tamaFood = user.getTamagotchiFood();
+          tamaFood-=1;
+          user.updateTamagotchiFood(tamaFood);
+          request.session().attribute("wasFed", true);
+        } else {
+          request.session().attribute("wasFed", false);
+        }
+        response.redirect("/newtamagotchi");
         return null;
       } else if (action.equals("play")){
         tamagotchi.updateOnPlay();
-        response.redirect("/playtamagotchi/" + tamagotchi.getId());
+        response.redirect("/newtamagotchi");
         return null;
       } else if (action.equals("sleep")){
         tamagotchi.updateOnSleep();
-        response.redirect("/sleeptamagotchi/" + tamagotchi.getId());
+        response.redirect("/newtamagotchi");
         return null;
       }
+      model.put("remainingFood", user.getTamagotchiFood());
       model.put("tamagotchi", tamagotchi);
       model.put("user", user);
       model.put("template", "templates/newtamagotchi.vtl");
@@ -435,10 +481,10 @@ public class App {
       User user = request.session().attribute("user");
       int id = Integer.parseInt(request.params("id"));
       Tamagotchi tamagotchi = Tamagotchi.find(id);
-      model.put("user", user);
+      model.put("fed", request.session().attribute("wasFed"));
       model.put("tamagotchi", tamagotchi);
       model.put("user", user);
-      model.put("template", "templates/feedtamagotchi.vtl");
+      model.put("template", "templates/newtamagotchi.vtl");
       return new ModelAndView (model, layout);
     }, new VelocityTemplateEngine());
 
@@ -448,9 +494,9 @@ public class App {
       int id = Integer.parseInt(request.params("id"));
       Tamagotchi tamagotchi = Tamagotchi.find(id);
       model.put("user", user);
+      model.put("fed", request.session().attribute("wasFed"));
       model.put("tamagotchi", tamagotchi);
-      model.put("user", user);
-      model.put("template", "templates/playtamagotchi.vtl");
+      model.put("template", "templates/newtamagotchi.vtl");
       return new ModelAndView (model, layout);
     }, new VelocityTemplateEngine());
 
@@ -459,10 +505,10 @@ public class App {
       User user = request.session().attribute("user");
       int id = Integer.parseInt(request.params("id"));
       Tamagotchi tamagotchi = Tamagotchi.find(id);
+      model.put("fed", request.session().attribute("wasFed"));
       model.put("user", user);
       model.put("tamagotchi", tamagotchi);
-      model.put("user", user);
-      model.put("template", "templates/sleeptamagotchi.vtl");
+      model.put("template", "templates/newtamagotchi.vtl");
       return new ModelAndView (model, layout);
     }, new VelocityTemplateEngine());
 //memory
@@ -738,6 +784,9 @@ public class App {
         int cardNumber = Integer.parseInt(request.session().attribute("cardNumber"));
         int score = request.session().attribute("memoryScore");
         score += cardNumber*10;
+        int points = user.getPoints();
+        points += score;
+        user.updatePoints(points);
         if (score > user.getMemoryHighScore()) {
           user.updateMemoryScore(score);
           String congrats = "Congratulations you set a new record!";
@@ -754,25 +803,25 @@ public class App {
       return new ModelAndView (model, layout);
     }, new VelocityTemplateEngine());
 //hangman
-    get("/hangman", (request, response) -> {
-      HashMap<String, Object> model = new HashMap<String, Object>();
-      User user = request.session().attribute("user");
-      model.put("user", user);
-      model.put("users", User.getSimonHighScores());
-      model.put("template", "templates/hangman.vtl");
-      return new ModelAndView (model, layout);
-    }, new VelocityTemplateEngine());
-
-    get("/hangman", (request, response) -> {
-      HashMap<String, Object> model = new HashMap<String, Object>();
-      User user = request.session().attribute("user");
-      model.put("user", user);
-      model.put("users", User.getSimonHighScores());
-      String userGuess = request.queryParams("guess");
-
-      model.put("template", "templates/hangman.vtl");
-      return new ModelAndView (model, layout);
-    }, new VelocityTemplateEngine());
+    // get("/hangman", (request, response) -> {
+    //   HashMap<String, Object> model = new HashMap<String, Object>();
+    //   User user = request.session().attribute("user");
+    //   model.put("user", user);
+    //   model.put("users", User.getSimonHighScores());
+    //   model.put("template", "templates/hangman.vtl");
+    //   return new ModelAndView (model, layout);
+    // }, new VelocityTemplateEngine());
+    //
+    // get("/hangman", (request, response) -> {
+    //   HashMap<String, Object> model = new HashMap<String, Object>();
+    //   User user = request.session().attribute("user");
+    //   model.put("user", user);
+    //   model.put("users", User.getSimonHighScores());
+    //   String userGuess = request.queryParams("guess");
+    //
+    //   model.put("template", "templates/hangman.vtl");
+    //   return new ModelAndView (model, layout);
+    // }, new VelocityTemplateEngine());
 
     get("/manageUsers", (request, response) -> {
       HashMap<String, Object> model = new HashMap<String, Object>();
