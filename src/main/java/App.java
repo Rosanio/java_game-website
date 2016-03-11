@@ -149,7 +149,9 @@ public class App {
 
     post("/buyFood", (request, response) -> {
       User user = request.session().attribute("user");
-      user.updateTamagotchiFood(1);
+      int tamagoFood = user.getTamagotchiFood();
+      tamagoFood++;
+      user.updateTamagotchiFood(tamagoFood);
       int points = user.getPoints();
       points -= 300;
       user.updatePoints(points);
