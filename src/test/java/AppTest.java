@@ -21,6 +21,9 @@ public class AppTest extends FluentTest {
   @ClassRule
   public static ServerRule server = new ServerRule();
 
+  @Rule
+  public DatabaseRule database = new DatabaseRule();
+
   @Test
   public void rootTest() {
       goTo("http://localhost:4567/");
@@ -30,6 +33,7 @@ public class AppTest extends FluentTest {
   @Test
   public void loginTest() {
     User newUser = new User("matt", "123", "user");
+    newUser.save();
     goTo("http://localhost:4567/");
     fill("#name").with("matt");
     fill("#password").with("123");
@@ -40,6 +44,7 @@ public class AppTest extends FluentTest {
   @Test
   public void simonTest() {
     User newUser = new User("matt", "123", "user");
+    newUser.save();
     goTo("http://localhost:4567/");
     fill("#name").with("matt");
     fill("#password").with("123");
@@ -52,6 +57,7 @@ public class AppTest extends FluentTest {
   @Test
   public void memoryTest() {
     User newUser = new User("matt", "123", "user");
+    newUser.save();
     goTo("http://localhost:4567/");
     fill("#name").with("matt");
     fill("#password").with("123");
@@ -64,6 +70,7 @@ public class AppTest extends FluentTest {
   @Test
   public void tamagotchiTest() {
     User newUser = new User("matt", "123", "user");
+    newUser.save();
     goTo("http://localhost:4567/");
     fill("#name").with("matt");
     fill("#password").with("123");
@@ -71,11 +78,13 @@ public class AppTest extends FluentTest {
     click("#tamagotchiGameHomeImage");
     assertThat(pageSource()).contains("Tamagotchi Simulator");
     assertThat(pageSource()).contains("Name your new pet");
+
   }
 
   @Test
   public void createTamagotchiTest() {
     User newUser = new User("matt", "123", "user");
+    newUser.save();
     goTo("http://localhost:4567/");
     fill("#name").with("matt");
     fill("#password").with("123");
@@ -84,5 +93,51 @@ public class AppTest extends FluentTest {
     fill("#name").with("toby");
     submit("#hatch");
     assertThat(pageSource()).contains("toby");
+  }
+
+  @Test
+  public void profileTest() {
+    User newUser = new User("matt", "123", "user");
+    newUser.save();
+    goTo("http://localhost:4567/");
+    fill("#name").with("matt");
+    fill("#password").with("123");
+    submit("#loginBtn");
+    click("#profileDropDown");
+    click("#profileLink");
+    assertThat(pageSource()).contains("Welcome matt");
+  }
+
+  @Test
+  public void signOutTest() {
+    User newUser = new User("matt", "123", "user");
+    newUser.save();
+    goTo("http://localhost:4567/");
+    fill("#name").with("matt");
+    fill("#password").with("123");
+    submit("#loginBtn");
+    click("#profileDropDown");
+    click("#signOutLink");
+    assertThat(pageSource()).contains("Login");
+  }
+
+  @Test
+  public void changePasswordTest() {
+    User newUser = new User("matt", "123", "user");
+    newUser.save();
+    goTo("http://localhost:4567/");
+    fill("#name").with("matt");
+    fill("#password").with("123");
+    submit("#loginBtn");
+    click("#profileDropDown");
+    click("#profileLink");
+    fill("#updatePassword").with("1234");
+    submit("#updatePasswordBtn");
+    click("#profileDropDown");
+    click("#signOutLink");
+    fill("#name").with("matt");
+    fill("#password").with("1234");
+    submit("#loginBtn");
+    assertThat(pageSource()).contains("Choose A Game");
   }
 }
