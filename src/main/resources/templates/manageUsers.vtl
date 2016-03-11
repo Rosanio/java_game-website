@@ -1,0 +1,36 @@
+<h1>Game Site Users</h1>
+<hr>
+<table style="width:70%">
+  <tr>
+    <th>Name</th>
+    <th>Password</th>
+    <th>Permission</th>
+    <th>Simon High Score</th>
+    <th>Memory High Score</th>
+    <th>Tamagotchi Score</th>
+    <th>Delete User</th>
+  </tr>
+  #foreach($user in $users)
+  <tr>
+    <td>$user.getName()</td>
+    <td>$user.getPassword()</td>
+    <td>
+      <form action="/updatePermissions/$user.getId()" method="post">
+        <select onchange="this.form.submit()" class="form-control" name="updatePermissions">
+          #if ($user.getPermissions().equals("user"))
+          <option>user</option>
+          <option>admin</option>
+          #else
+          <option>admin</option>
+          <option>user</option>
+          #end
+        </select>
+      </form>
+    </td>
+    <td>$user.getSimonHighScore()</td>
+    <td>$user.getMemoryHighScore()</td>
+    <td>$user.getPoints()</td>
+    <td><a href="/delete/$user.getId()">&CircleTimes;</a></td>
+  </tr>
+  #end
+</table>
