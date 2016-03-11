@@ -3,7 +3,7 @@
   <h4>$tamagotchi.getName()</h4>
   <p>Age: $tamagotchi.getAge() days</p>
   <p>Gender: $tamagotchi.getGender()</p><br>
-  #if ($tamagotchi.isAlive() != true)
+  #if (!$tamagotchi.isAlive())
     <img src="/images/deadtama.jpg" id="tamagotchiimg">
     <h4>$tamagotchi.getName() has died!</h4>
     <form action="/tamagotchi">

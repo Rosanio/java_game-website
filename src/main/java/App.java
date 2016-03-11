@@ -384,7 +384,7 @@ public class App {
       int id = Integer.parseInt(request.params("id"));
       Tamagotchi tamagotchi = Tamagotchi.find(id);
       String action = request.queryParams("action");
-      if(tamagotchi.isAlive() == false){
+      if(!tamagotchi.isAlive()){
         response.redirect("/newtamagotchi");
         return null;
       }
