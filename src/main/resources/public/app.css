@@ -13,8 +13,6 @@ body {
 
 .gameHeaderText {
   text-align: center;
-  font-weight: bold;
-  font-size: 50px;
 }
 
 .playButton {
@@ -25,9 +23,12 @@ body {
   margin-left: 43%;
 }
 
-#profilePic {
+#userProfilePic {
   max-height: 250px;
   width: auto;
+  border-radius: 50px;
+  margin-bottom: 20px;
+  margin-top: 5px;
 }
 
 .color-btn {
@@ -137,4 +138,37 @@ ul.img-wrapper li {
   background-position: center;
   background-repeat: repeat;
 
+}
+
+#rematchBtn {
+  float: left;
+  margin-right: 10px;
+}
+
+.memoryBtns {
+  text-align: center;
+}
+
+#onePlayer {
+  margin-right: 10px;
+}
+
+.gameOverText {
+  font-weight: bold;
+  font-size: 15px;
+}
+
+th {
+  text-align: center;
+  border-bottom: 1px solid #e6e6e6;
+}
+
+table {
+  text-align: center;
+  margin-left: 15%;
+}
+
+.highScores {
+  margin-top: 30px;
+  margin-bottom: 20px;
 }

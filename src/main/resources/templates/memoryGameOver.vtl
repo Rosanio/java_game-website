@@ -6,16 +6,21 @@
   #else
 <h2>Everyones a Winner!</h2>
   #end
-<p>$user.getName(): $player1score</p>
-<p>$player2.getName(): $player2score</p>
-<p>$user.getName()'s Record: $user.getMemoryWins() - $user.getMemoryLosses()</p>
-<p>$player2.getName()'s Record: $player2.getMemoryWins() - $player2.getMemoryLosses()</p>
-<form action="/memory" method="post">
+<hr>
+<h4>Game Score:</h4>
+<p><span class="gameOverText">$user.getName():</span> $player1score</p>
+<p><span class="gameOverText">$player2.getName():</span> $player2score</p>
+<hr>
+<h4>Win-Loss Record</h4>
+<p><span class="gameOverText">$user.getName()'s Record:</span> $user.getMemoryWins() - $user.getMemoryLosses()</p>
+<p><span class="gameOverText">$player2.getName()'s Record:</span> $player2.getMemoryWins() - $player2.getMemoryLosses()</p>
+<form id="rematchBtn" action="/memory" method="post">
   <button type="submit" class="btn btn-danger">Rematch!!</button>
 </form>
 <a href="/memory"><button class="btn btn-info">New Game</button></a>
 #else
 <h2>You Did It!!</h2>
+<hr>
 <div class="row">
   <div class="col-md-6">
     <h4>Your Final Score:</h4>
@@ -23,17 +28,25 @@
     #if ($congrats)
     $congrats
     #end
+    <br>
     <h4>High Score:</h4>
     <p>$highScore</p>
     <a href="/memory"><button class="btn btn-danger">Play Again</button></a>
   </div>
   <div class="col-md-6">
     <h3 class="gameHeaderText">Current High Scores:</h3>
-    <ul>
-    #foreach($useer in $users)
-      <li>$useer.getName(): $useer.getMemoryHighScore()</li>
-    #end
-    </ul>
+    <table style="width:70%">
+      <tr>
+        <th>Player</th>
+        <th>Score</th>
+      </tr>
+      #foreach($useer in $users)
+      <tr>
+        <td>$useer.getName()</td>
+        <td>$useer.getMemoryHighScore()</td>
+      </tr>
+      #end
+    </table>
   </div>
 </div>
 #end

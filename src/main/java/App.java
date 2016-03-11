@@ -533,12 +533,15 @@ public class App {
       HashMap<String, Object> model = new HashMap<String, Object>();
       User user = request.session().attribute("user");
       User player2 = request.session().attribute("player2");
-      int player1score = request.session().attribute("player1score");
-      int player2score = request.session().attribute("player2score");
+      if(player2 != null) {
+        int player1score = request.session().attribute("player1score");
+        int player2score = request.session().attribute("player2score");
+        model.put("player1score", player1score);
+        model.put("player2score", player2score);
+
+      }
       List<Card> cards = request.session().attribute("cards");
       int score = request.session().attribute("memoryScore");
-      model.put("player1score", player1score);
-      model.put("player2score", player2score);
       model.put("score", score);
       model.put("user", user);
       model.put("player2", player2);
@@ -564,7 +567,6 @@ public class App {
         request.session().attribute("firstCard", card);
       }
       if (counter == 2) {
-        int turn = request.session().attribute("turn");
         Card caard = request.session().attribute("firstCard");
         Card secondCard = cards.get(Integer.parseInt(request.queryParams("cards")));
         request.session().attribute("secondCard", secondCard);
@@ -572,6 +574,7 @@ public class App {
 
         if (cardMatch) {
           if(player2 != null) {
+            int turn = request.session().attribute("turn");
             int player1score = request.session().attribute("player1score");
             int player2score = request.session().attribute("player2score");
             if (turn == 1) {
@@ -615,6 +618,7 @@ public class App {
             score -= 5;
             request.session().attribute("memoryScore", score);
           } else {
+            int turn = request.session().attribute("turn");
             if(turn == 1) {
               turn = 2;
               request.session().attribute("turn", turn);
@@ -704,6 +708,7 @@ public class App {
         }
         request.session().attribute("memoryScore", score);
         model.put("score", score);
+        model.put("highScore", user.getMemoryHighScore());
         model.put("users", User.getMemoryHighScores());
 
       }

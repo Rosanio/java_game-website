@@ -1,33 +1,40 @@
 <h1>Player 2 Login</h1>
 <hr>
-<h3>Select Player 2</h3>
-<form action="/player2LoggedIn" method="post">
-  <div class="form-group">
-    <label for="name">Username</label>
-    <select name="player2" class="form-control">
-    #foreach ($gameUser in $users)
-      #if (!$gameUser.equals($user))
-      <option value="$gameUser.getId()">$gameUser.getName()</option>
-      #end
-    #end
-  </select>
+<div class="row">
+  <div class="col-xs-5">
+    <h3>Select Player 2</h3>
+    <form action="/player2LoggedIn" method="post">
+      <div class="form-group">
+        <label for="name">Username</label>
+        <select name="player2" class="form-control">
+          #foreach ($gameUser in $users)
+          #if (!$gameUser.equals($user))
+          <option value="$gameUser.getId()">$gameUser.getName()</option>
+          #end
+          #end
+        </select>
+      </div>
+      <button type="submit" class="btn btn-success">Go!</button>
+    </form>
   </div>
-  <button type="submit" class="btn btn-default">Go!</button>
-</form>
-
-<h3>Sign Up</h3>
-<form action="/player2Login" method="post">
-  <div class="form-group">
-    <label for="name">Username</label>
-    <input type="text" name="name" id="name">
+  <div class="col-xs-2">
   </div>
-  <div class="form-group">
-    <label for="password">Password</label>
-    <input type="password" name="password" id="password">
+  <div class="col-xs-5">
+    <h3>Sign Up</h3>
+    <form action="/player2Login" method="post">
+      <div class="form-group">
+        <label for="name">Username</label>
+        <input type="text" name="name" id="name" class="form-control">
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" name="password" id="password" class="form-control">
+      </div>
+      <div class="form-group">
+        <label for="passwordhint">Password Hint (Optional)</label>
+        <input type="text" name="passwordhint" id="passwordhint" class="form-control">
+      </div>
+      <button type="submit" class="btn btn-primary">Sign Up</button>
+    </form>
   </div>
-  <div class="form-group">
-    <label for="passwordhint">Password Hint (Optional)</label>
-    <input type="text" name="passwordhint" id="passwordhint">
-  </div>
-  <button type="submit" class="btn btn-default">Sign Up</button>
-</form>
+</div>

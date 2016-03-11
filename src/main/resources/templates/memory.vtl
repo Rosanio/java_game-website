@@ -1,8 +1,9 @@
+<h1 class="gameHeaderText">Memory</h1>
+<hr>
 <div class="row">
   <div class="col-md-4">
   </div>
   <div class="col-md-4">
-    <h1 class="gameHeaderText">Memory</h1>
     <img src="/images/memory.jpg" alt="simon says" class="img-responsive center-block">
     <br></br>
     <form action="/memory" method="post">
@@ -10,14 +11,23 @@
         <label for="cardNumber">Select a difficulty level</label>
         <input type="range" name="cardNumber" min="2" max="52" step="2">
       </div>
-      <button type="submit" class="btn btn-success gameButton" name="players" value="1">One Player!</button>
-      <button type="submit" class="btn btn-success gameButton" name="players" value="2">Two Players!</button>
+      <div class="memoryBtns">
+        <button id="onePlayer" type="submit" class="btn btn-info" name="players" value="1">One Player!</button>
+        <button type="submit" class="btn btn-success" name="players" value="2">Two Players!</button>
+      </div>
     </form>
-    <h3 class="gameHeaderText">Current High Scores:</h3>
-    <ul>
-    #foreach($useer in $users)
-      <li>$useer.getName(): $useer.getMemoryHighScore()</li>
-    #end
-    </ul>
+    <h3 class="gameHeaderText highScores">Current High Scores:</h3>
+    <table style="width:70%">
+      <tr>
+        <th>Player</th>
+        <th>Score</th>
+      </tr>
+      #foreach($useer in $users)
+      <tr>
+        <td>$useer.getName()</td>
+        <td>$useer.getMemoryHighScore()</td>
+      </tr>
+      #end
+    </table>
   </div>
 </div>
