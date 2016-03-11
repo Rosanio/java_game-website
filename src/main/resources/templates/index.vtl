@@ -3,19 +3,22 @@
 #if($incorrectUsername)
   <p>This username does not exist.</p>
 #end
-
-<h3>Login</h3>
-<form action="/checkPassword" method="post">
-  <div class="form-group">
-    <label for="name">Username</label>
-    <input type="text" name="name" id="name">
+<div class="row">
+  <div class="col-xs-3">
+    <h3>Login</h3>
+    <form action="/checkPassword" method="post">
+      <div class="form-group">
+        <label for="name">Username</label>
+        <input type="text" name="name" id="name" class="form-control">
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" name="password" id="password" class="form-control">
+      </div>
+      <button type="submit" class="btn btn-default">Login</button>
+    </form>
   </div>
-  <div class="form-group">
-    <label for="password">Password</label>
-    <input type="password" name="password" id="password">
-  </div>
-  <button type="submit" class="btn btn-default">Login</button>
-</form>
+</div>
 
 #if($incorrectPassword)
   #if($user.getPasswordHint().length() > 0)
@@ -24,5 +27,3 @@
     <p>Incorrect Password</p>
   #end
 #end
-
-<!-- <a class="btn btn-default" href="/signUp">Sign Up</a> -->
