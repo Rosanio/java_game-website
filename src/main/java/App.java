@@ -774,5 +774,50 @@ public class App {
       return new ModelAndView (model, layout);
     }, new VelocityTemplateEngine());
 
+    get("/manageUsers", (request, response) -> {
+      HashMap<String, Object> model = new HashMap<String, Object>();
+      User user = request.session().attribute("user");
+      model.put("user", user);
+      model.put("users", User.all());
+      model.put("template", "templates/manageUsers.vtl");
+      return new ModelAndView (model, layout);
+    }, new VelocityTemplateEngine());
+
+    get("/delete/:id", (request, response) -> {
+      HashMap<String, Object> model = new HashMap<String, Object>();
+      User user = request.session().attribute("user");
+      model.put("user", user);
+      model.put("users", User.all());
+
+      User selectedUser = User.find(Integer.parseInt(request.params("id")));
+      model.put("selectedUser", selectedUser);
+      model.put("template", "templates/manageUsers-delete.vtl");
+      return new ModelAndView (model, layout);
+    }, new VelocityTemplateEngine());
+
+
+    post("/delete/:id", (request, response) -> {
+      HashMap<String, Object> model = new HashMap<String, Object>();
+      User selectedUser = User.find(Integer.parseInt(request.params("id")));
+      User user = request.session().attribute("user");
+      selectedUser.delete();
+      model.put("user", user);
+      model.put("users", User.all());
+      model.put("template", "templates/manageUsers.vtl");
+      return new ModelAndView (model, layout);
+    }, new VelocityTemplateEngine());
+
+    post("/updatePermissions/:id", (request, response) -> {
+      HashMap<String, Object> model = new HashMap<String, Object>();
+      User selectedUser = User.find(Integer.parseInt(request.params("id")));
+      User user = request.session().attribute("user");
+      String permission = request.queryParams("updatePermissions");
+      selectedUser.updatePermissions(permission);
+      model.put("user", user);
+      model.put("users", User.all());
+      model.put("template", "templates/manageUsers.vtl");
+      return new ModelAndView (model, layout);
+    }, new VelocityTemplateEngine());
+
   } //end of main
 } //end of app

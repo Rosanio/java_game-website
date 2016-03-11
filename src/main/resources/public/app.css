@@ -202,3 +202,17 @@ table {
   margin-top: 30px;
   margin-bottom: 20px;
 }
+
+
+#center-warn {
+  text-align: center;
+  margin: 100px;
+  border-style: dashed;
+  border-width: : 4px;
+  border-color: crimson;
+  border-radius: 20px;
+}
+
+#center-warn button {
+  width: 100%;
+}

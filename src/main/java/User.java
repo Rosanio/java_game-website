@@ -179,6 +179,14 @@ public class User {
     }
   }
 
+  public void updatePermissions(String newPermissions) {
+    this.password = newPermissions;
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "UPDATE users SET permissions = :newPermissions WHERE id = :id" ;
+      con.createQuery(sql).addParameter("id", id).addParameter("newPermissions", newPermissions).executeUpdate();
+    }
+  }
+
   public static List<User> getSimonHighScores() {
     try(Connection con = DB.sql2o.open()) {
       String sql = "SELECT * FROM users ORDER BY simon_high_score DESC LIMIT 10" ;
