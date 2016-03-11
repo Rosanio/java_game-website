@@ -14,6 +14,7 @@ public class User {
   private int points;
   private int memory_wins;
   private int memory_losses;
+  private int tamagotchi_food;
 
   public User(String name, String password, String permissions) {
     this.name = name;
@@ -24,6 +25,7 @@ public class User {
     this.points = 0;
     this.memory_wins = 0;
     this.memory_losses = 0;
+    this.tamagotchi_food = 5;
   }
 
   public int getId() {
@@ -71,6 +73,10 @@ public class User {
     return memory_losses;
   }
 
+  public int getTamagotchiFood() {
+    return tamagotchi_food;
+  }
+
   public static List<User> all() {
     try(Connection con = DB.sql2o.open()) {
       String sql = "SELECT * FROM users";
@@ -90,7 +96,7 @@ public class User {
 
   public void save() {
     try(Connection con = DB.sql2o.open()) {
-      String sql = "INSERT INTO users (name, password, permissions, simon_high_score, memory_high_score, points, memory_wins, memory_losses) VALUES (:name, :password, :permissions, 0, 0, 0, 0, 0)";
+      String sql = "INSERT INTO users (name, password, permissions, simon_high_score, memory_high_score, points, memory_wins, memory_losses, tamagotchi_food) VALUES (:name, :password, :permissions, 0, 0, 0, 0, 0, 5)";
       this.id = (int) con.createQuery(sql, true).addParameter("name", name).addParameter("password", password).addParameter("permissions", permissions).executeUpdate().getKey();
     }
   }
@@ -212,6 +218,14 @@ public class User {
     try(Connection con = DB.sql2o.open()) {
       String sql = "UPDATE users SET memory_losses = :memory_losses WHERE id = :id" ;
       con.createQuery(sql).addParameter("id", id).addParameter("memory_losses", memory_losses).executeUpdate();
+    }
+  }
+
+  public void updateTamagotchiFood(int tamagotchi_food) {
+    this.tamagotchi_food = tamagotchi_food;
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "UPDATE users SET tamagotchi_food = :tamagotchi_food WHERE id = :id" ;
+      con.createQuery(sql).addParameter("id", id).addParameter("tamagotchi_food", tamagotchi_food).executeUpdate();
     }
   }
 }

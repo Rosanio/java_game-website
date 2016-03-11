@@ -98,7 +98,7 @@ public class Tamagotchi {
   }
 //life/age status
   public boolean isAlive(){
-    if (hunger_level == 0 || age >= 90 || this.id == 0){
+    if (hunger_level == 0 || age >= 90 || sleep_level == 0){
       try (Connection con = DB.sql2o.open()){
         String sql = "UPDATE tamagotchis SET alive = false";
         con.createQuery(sql)
@@ -152,16 +152,28 @@ public class Tamagotchi {
 //update
   public void updateAge(){
     this.age+=1;
+    if((this.sleep_level-1) < 0){
+      this.sleep_level = 0;
+    } else {
+      this.sleep_level-=1;
+    }
+    if((this.happy_level-1) < 0){
+      this.happy_level = 0;
+    } else {
+      this.happy_level-=1;
+    }
     if ((this.hunger_level-1) < 0){
       this.hunger_level = 0;
     } else {
       this.hunger_level-=1;
     }
     try(Connection con = DB.sql2o.open()){
-      String sql = "UPDATE tamagotchis SET (age, hunger_level) = (:age, :hunger_level)";
+      String sql = "UPDATE tamagotchis SET (age, hunger_level, sleep_level, happy_level) = (:age, :hunger_level, :sleep_level, :happy_level)";
       con.createQuery(sql)
       .addParameter("age", this.age)
       .addParameter("hunger_level", hunger_level)
+      .addParameter("sleep_level", sleep_level)
+      .addParameter("happy_level", happy_level)
       .executeUpdate();
     }
   }

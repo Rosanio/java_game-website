@@ -12,6 +12,15 @@
   <input type="text" name="updatePassword" id="updatePassword">
   <button type="submit" class="btn btn-default" id="updatePasswordBtn">Change password</button>
 </form>
+
+<h3>Total Points</h3>
+<p><span class="gameOverText">Points:</span> $user.getPoints()</p>
+#if($user.getPoints() >= 300)
+<form action="/buyFood" method="post">
+  <button type="submit" class="btn btn-warning">Buy Tamagotchi Food</button>
+</form>
+#end
+
 <h3>High Scores</h3>
 <p><span class="gameOverText">Simon Says:</span> $user.getSimonHighScore()</p>
 <p><span class="gameOverText">Memory:</span> $user.getMemoryHighScore()</p>
