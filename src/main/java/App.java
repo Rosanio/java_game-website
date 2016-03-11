@@ -10,7 +10,9 @@ import static spark.Spark.*;
 
 public class App {
   public static Integer globalUserId;
+  public static String website;
   public static long intervalPeriod = 1000;
+
   public static void main(String[] args) {
     staticFileLocation("/public");
     String layout = "templates/layout.vtl";
@@ -357,6 +359,8 @@ public class App {
         response.redirect("/newtamagotchi");
         return null;
       }
+      website = "tamagotchi";
+      System.out.println(website);
       model.put("user", user);
       model.put("template", "templates/tamagotchi.vtl");
       return new ModelAndView (model, layout);
@@ -393,9 +397,9 @@ public class App {
       user.updateTamagotchi(tamagotchi.getId());
       model.put("user", user);
       model.put("tamagotchi", tamagotchi);
-      model.put("template", "templates/newtamagotchi.vtl");
-      return new ModelAndView (model, layout);
-    }, new VelocityTemplateEngine());
+      response.redirect("/newtamagotchi");
+      return null;
+    });
 
     post("/tamagotchiupdate/:id", (request, response) -> {
       HashMap<String, Object> model = new HashMap<String, Object>();
