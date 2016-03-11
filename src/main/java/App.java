@@ -157,7 +157,7 @@ public class App {
       request.session().attribute("diffMultiplier", diffMultiplier);
       Turn newTurn = new Turn();
       newTurn.save();
-      response.redirect("/3");
+      response.redirect("/5");
       return null;
       });
 
@@ -174,25 +174,43 @@ public class App {
       newTurn.save();
       response.redirect("/replay");
       return null;
-      });
+    });
 
-      get("/3", (request, response) -> {
-        HashMap<String, Object> model = new HashMap<String, Object>();
-        model.put("template", "templates/3.vtl");
-        return new ModelAndView (model, layout);
-      }, new VelocityTemplateEngine());
+    get("/5", (request, response) -> {
+      HashMap<String, Object> model = new HashMap<String, Object>();
+      model.put("template", "templates/5.vtl");
+      return new ModelAndView (model, layout);
+    }, new VelocityTemplateEngine());
 
-      get("/2", (request, response) -> {
-        HashMap<String, Object> model = new HashMap<String, Object>();
-        model.put("template", "templates/2.vtl");
-        return new ModelAndView (model, layout);
-      }, new VelocityTemplateEngine());
+    get("/4", (request, response) -> {
+      HashMap<String, Object> model = new HashMap<String, Object>();
+      model.put("template", "templates/4.vtl");
+      return new ModelAndView (model, layout);
+    }, new VelocityTemplateEngine());
 
-      get("/1", (request, response) -> {
-        HashMap<String, Object> model = new HashMap<String, Object>();
-        model.put("template", "templates/1.vtl");
-        return new ModelAndView (model, layout);
-      }, new VelocityTemplateEngine());
+    get("/3", (request, response) -> {
+      HashMap<String, Object> model = new HashMap<String, Object>();
+      model.put("template", "templates/3.vtl");
+      return new ModelAndView (model, layout);
+    }, new VelocityTemplateEngine());
+
+    get("/2", (request, response) -> {
+      HashMap<String, Object> model = new HashMap<String, Object>();
+      model.put("template", "templates/2.vtl");
+      return new ModelAndView (model, layout);
+    }, new VelocityTemplateEngine());
+
+    get("/1", (request, response) -> {
+      HashMap<String, Object> model = new HashMap<String, Object>();
+      model.put("template", "templates/1.vtl");
+      return new ModelAndView (model, layout);
+    }, new VelocityTemplateEngine());
+
+    get("/go", (request, response) -> {
+      HashMap<String, Object> model = new HashMap<String, Object>();
+      model.put("template", "templates/go.vtl");
+      return new ModelAndView (model, layout);
+    }, new VelocityTemplateEngine());
 
     get("/replay", (request, response) -> {
       if (Turn.allShown() == false) {
