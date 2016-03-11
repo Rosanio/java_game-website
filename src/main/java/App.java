@@ -41,7 +41,7 @@ public class App {
       };
       Timer timer = new Timer();
       long delay = 0;
-      long intervalPeriod = 60000;
+      long intervalPeriod = 7000;
       timer.scheduleAtFixedRate(task, delay, intervalPeriod);
 //user info & game page
     get("/", (request, response) -> {
@@ -149,10 +149,12 @@ public class App {
 
     post("/buyFood", (request, response) -> {
       User user = request.session().attribute("user");
-      user.updateTamagotchiFood(1);
       int points = user.getPoints();
       points -= 300;
       user.updatePoints(points);
+      int updateFood = user.getTamagotchiFood();
+      updateFood++;
+      user.updateTamagotchiFood(updateFood);
       response.redirect("/profile");
       return null;
     });
