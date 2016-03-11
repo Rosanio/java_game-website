@@ -78,6 +78,5 @@ public class CardTest {
     Card.fillDatabase();
     List<Card> cards = Card.makeListOfCards(16);
     assertEquals(cards.get(0).getSymbol(), "⌛️");
-    assertEquals(cards.get(1).getSymbol(), "2");
   }
 }
