@@ -1,8 +1,9 @@
+<h1 class="gameHeaderText">Simon Says</h1>
+<hr>
 <div class="row">
   <div class="col-md-4">
   </div>
   <div class="col-md-4">
-    <h1 class="gameHeaderText">Simon Says</h1>
     <img src="/images/simon.jpg" alt="simon says" class="img-responsive center-block">
     <br></br>
     <form action="next-turn" method="post">
@@ -12,11 +13,18 @@
       </div>
       <button type="submit" class="btn btn-success gameButton">Go!</button>
     </form>
-    <h3 class="gameHeaderText">Current High Scores:</h3>
-    <ul>
-    #foreach($useer in $users)
-      <li>$useer.getName(): $useer.getSimonHighScore()</li>
-    #end
-    </ul>
+    <h3 class="gameHeaderText highScores">Current High Scores:</h3>
+    <table style="width:70%">
+      <tr>
+        <th>Player</th>
+        <th>Score</th>
+      </tr>
+      #foreach($useer in $users)
+      <tr>
+        <td>$useer.getName()</td>
+        <td>$useer.getSimonHighScore()</td>
+      </tr>
+      #end
+    </table>
   </div>
 </div>
