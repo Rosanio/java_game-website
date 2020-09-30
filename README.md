@@ -8,31 +8,31 @@ Brad Pizzimenti
 Anna Becker
 Izzy George
 
-## Description
+## Description about game
 This is a game "arcade" using Java, Postgres, Spark, Gradle, and Velocity Template Engine
 
-## Setup
+## Steps to Setup
 
-Clone this repository:
+Step 1: Clone this repository:
 ```
 $ cd ~/Desktop
 $ git clone https://github.com/Rosanio/java_game-website
 $ cd java_game-website
 ```
 
-Open terminal and run Postgres:
+Step 2: Open terminal and run Postgres:
 ```
 $ postgres
 ```
 
-Open a new tab in terminal and create the `game-website` database:
+Step 3: Open a new tab in terminal and create the `game-website` database:
 ```
 $ psql
 $ CREATE DATABASE game_website;
 $ psql game_website < game_website.sql
 ```
 
-Navigate back to the directory where this repository has been cloned and run gradle:
+Step 4: Navigate back to the directory where this repository has been cloned and run gradle:
 ```
 $ gradle run
 ```
